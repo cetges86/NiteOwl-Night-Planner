@@ -7,18 +7,50 @@
     <title>NiteOwl Night Planner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P"
+        crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
     <script src="assets/js/script.js"></script>
 </head>
 
 <body>
-       <div class="container">
+    <div class="container">
         <div class="valign-wrapper">
-            <i class="large material-icons">local_dining</i>
-            <i class="large material-icons">local_bar</i>
-            <i class="large material-icons">music_note</i>
-            <i class="large material-icons">local_movies</i>
+            <div class="row">
+                <div class="col s4"></div>
+                <form class="col s8 center-align">
+                    <div class="row center-align">
+                        <div class="input-field col s8">
+                            <input id="first_name" type="text" class="validate">
+                            <label for="first_name">Name</label>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="input-field col s8">
+                            <input id="email" type="email" class="validate">
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button id="submit"class="btn light-blue darken-3 waves-effect waves-light" type="submit" name="action">Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div id="icons" class="valign-wrapper">
+            <i class="fas fa-utensils"></i>
+            <i class="fas fa-beer"></i>
+            <i class="fas fa-music"></i>
+            <i class="fas fa-ticket-alt"></i>
         </div>
     </div>
 
