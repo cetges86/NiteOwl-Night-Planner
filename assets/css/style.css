@@ -45,6 +45,22 @@ input {
     box-shadow: 0 1px 0 0#124daa !important;
   }
 
+h5 {
+    color:lightgray;
+}
 
+li{
+    display: inline;
+    list-style:none;
+    color: white;
+}
+
+img {
+    max-width: 300px;
+}
+
+#card {
+    max-width:300px;
+}
 
 
