@@ -3,10 +3,17 @@ $(document).ready(function () {
     
     var myLat;
     var myLong;
-    
-    function displayCards(type) {
 
-    }
+    $('#icons').hide();
+    $('#card').hide();
+  
+  function displayCards(type){
+    $('#icons').remove();
+    $('#card').show(1500);
+    
+}
+
+
 
     function findLocation() {
 
@@ -25,7 +32,6 @@ $(document).ready(function () {
             console.log("my latitude: " + crd.latitude);
             console.log("my longitude: " + crd.longitude);
         };
-
         function error(err) {
             console.warn('ERROR(' + err.code + '): ' + err.message);
         };
@@ -35,6 +41,12 @@ $(document).ready(function () {
     }
 
     findLocation();
+  
+  var nameDisplay = (`<h5> ${name} </h5>`);
+
+    $('#nameDisplay').append(nameDisplay).fadeIn(2000);
+
+    console.log(email);
 
     $('#icons').hide();
 
@@ -52,8 +64,10 @@ $(document).ready(function () {
         $('#icons').show(1500);
     })
 
-    $('body').on('click', '#food', function (event) {
-        alert("clicked on food!");
-    });
+$('.fas').on('click',function(){
+    var type = $(this).attr('id')
+    displayCards(this);
+})
+
 
 });
