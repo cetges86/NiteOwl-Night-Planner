@@ -12,6 +12,11 @@ body {
     font-size: 8rem;
 }
 
+.fas:hover {
+    color:#124daa;
+    transition: 1s;
+}
+
 .row {
     width: 100%;
 }
@@ -38,4 +43,7 @@ input {
     border-bottom: 1px solid #124daa !important;
     box-shadow: 0 1px 0 0#124daa !important;
   }
+
+
+
 

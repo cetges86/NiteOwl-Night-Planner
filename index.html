@@ -12,14 +12,15 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P"
         crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
     <script src="assets/js/script.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <div class="valign-wrapper">
+        <div id="inputs" class="valign-wrapper">
             <div class="row">
                 <div class="col s4"></div>
                 <form class="col s8 center-align">
@@ -46,11 +47,11 @@
         </div>
 
 
-        <div id="icons" class="valign-wrapper">
-            <i class="fas fa-utensils"></i>
-            <i class="fas fa-beer"></i>
-            <i class="fas fa-music"></i>
-            <i class="fas fa-ticket-alt"></i>
+        <div id="icons" class="valign-wrapper hidden">
+            <i id="food" class="fas fa-utensils"></i>
+            <i id="beer" class="fas fa-beer"></i>
+            <i id="concert" class="fas fa-music"></i>
+            <i id="movies" class="fas fa-ticket-alt"></i>
         </div>
     </div>
 
@@ -59,8 +60,7 @@
 
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </body>
 
