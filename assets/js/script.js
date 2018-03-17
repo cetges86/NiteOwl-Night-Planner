@@ -65,7 +65,7 @@ $(document).ready(function () {
     })
 
 function restaurantsInfo(){
-    var queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLon + '&apikey=1186480d6decb5529b6df0ca0c638be9'
+    var queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
     $.ajax({
         url: queryURL,
         method: "Get"
