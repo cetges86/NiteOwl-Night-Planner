@@ -1,10 +1,13 @@
 body {
     background-color: #000000;
 }
+.valign-wrapper {
+    height:850px;
+}
+
 
 i.large{
     color: gray;
-    text-align: center;
-    margin:0 auto;
-
+    margin: 0 auto;
+    font-size: 8rem;
 }
