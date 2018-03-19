@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>NiteOwl Night Planner 2.0!</title>
+    <title>NiteOwl Night Planner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk"
@@ -33,11 +33,16 @@
                             <label for="first_name">Name</label>
                         </div>
                     </div>
-                    <br>
                     <div class="row">
                         <div class="input-field col s8">
                             <input id="email" type="email" class="validate">
                             <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s8">
+                            <input id="zip" type="number" class="validate">
+                            <label for="zip-code">Zip Code</label>
                         </div>
                     </div>
                     <div class="row">
@@ -62,14 +67,14 @@
             <div id="card" class="container">
                 <div class="card small">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img id="image" class="activator" src="https://www.parkinn.com/galleries/gallery-root/parkinn/TLLPR/large_412x309/TLLPR_DIN_18.jpg">
+                        <img id="image" class="activator" src="">
                     </div>
                     <div class="card-content">
                         <span class="name card-title activator grey-text text-darken-4">Item Name
                             <i class="material-icons right">more_vert</i>
                         </span>
                         <p>
-                            <a id="link" href="">View Menu</a>
+                            <a target="_blank" id="link" href="">View Menu</a>
                         </p>
                     </div>
                     <div class="card-reveal">

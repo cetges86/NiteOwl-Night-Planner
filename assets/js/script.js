@@ -7,32 +7,6 @@ $(document).ready(function () {
     $('#icons').hide();
     $('#card').hide();
 
-    // function displayCards(type) {
-    //     $('#icons').hide();
-
-    //     var restInfo = {
-    //         name:response[i].name,
-    //         address:response[i].location.address,
-    //         cuisine:response[i].cuisines,
-    //         menuLink:response[i].menu_url,
-    //         rating:response[i].user_rating.aggregate_rating,
-    //         cost:response[i].average_cost_for_two,
-    //         photo:response[i].photos_url
-    //     }
-    //     $('#name').text(restInfo.name);
-    //     var list = $('<ul>');
-    //     $(list).append(`<li>Address:${restInfo.address}</li>
-    //     <li>Cuisine:${restInfo.cuisine}</li>
-    //     <li>Average Cost for Two:${restInfo.cuisine}</li>
-    //     <li>Avg. Rating: ${restInfo.rating}</li>`);
-
-    //     $('#info').append(list);
-    //     $('#image').attr('src',restInfo.photo);
-    //     $('#link').attr('href',restInfo.menuLink);
-    //     $('#card').show(1500);
-
-    // }
-
     function findLocation() {
 
         var options = {
@@ -52,6 +26,7 @@ $(document).ready(function () {
         };
         function error(err) {
             console.warn('ERROR(' + err.code + '): ' + err.message);
+
         };
 
         navigator.geolocation.getCurrentPosition(success, error, options);
@@ -68,6 +43,8 @@ $(document).ready(function () {
 
         var email = $('#email').val().trim();
 
+        var zip = $('#zip').val().trim();
+
         console.log(name);
         console.log(email);
         var nameDisplay = (`<h5> ${name} </h5>`);
@@ -76,7 +53,7 @@ $(document).ready(function () {
 
         $('#inputs').hide();
         $('#icons').show(1500);
-        setTimeout(restaurantsInfo,1500);
+        setTimeout(restaurantsInfo, 1500);
     })
 
 
@@ -87,12 +64,16 @@ $(document).ready(function () {
             url: queryURL,
             method: "Get"
         }).then(function (response) {
+
             $('.fas').on('click', function () {
                 var type = $(this).attr('id')
                 $('#icons').hide();
 
                 for (var i = 0; i < 10; i++) {
+                    displayCards(i);
+                
 
+                function displayCards(i) {
                     var restInfo = {
                         name: response.restaurants[i].restaurant.name,
                         address: response.restaurants[i].restaurant.location.address,
@@ -104,11 +85,13 @@ $(document).ready(function () {
                     };
 
                     $('.name').text(restInfo.name);
+
                     var list = $('<ul>');
                     $(list).append(`<li>Address: ${restInfo.address}</li>
-                        <li>Cuisine: ${restInfo.cuisine}</li>
-                        <li>Average Cost for Two: ${restInfo.cost}</li>
-                        <li>Avg. Rating: ${restInfo.rating}</li>`);
+                    <li>Cuisine: ${restInfo.cuisine}</li>
+                    <li>Average Cost for Two: ${restInfo.cost}</li>
+                    <li>Avg. Rating: ${restInfo.rating}</li>`);
+
                     $('#info').html(list);
                     $('#image').attr('src', restInfo.photo);
                     $('#link').attr('href', restInfo.menuLink);
@@ -117,12 +100,11 @@ $(document).ready(function () {
 
                     $('#card').show(1500);
 
-
                 }
+            }
             })
-            console.log(response)
         });
     };
- 
+
 
 });
