@@ -49,12 +49,6 @@ h5 {
     color:lightgray;
 }
 
-li{
-    display: inline;
-    list-style:none;
-    color: white;
-}
-
 img {
     max-width: 300px;
 }
@@ -62,5 +56,7 @@ img {
 #card {
     max-width:300px;
 }
+
+
 
 
