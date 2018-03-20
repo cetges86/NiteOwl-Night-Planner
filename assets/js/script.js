@@ -68,40 +68,56 @@ $(document).ready(function () {
             $('.fas').on('click', function () {
                 var type = $(this).attr('id')
                 $('#icons').hide();
+                $('#card-display').hide();
 
                 for (var i = 0; i < 10; i++) {
                     displayCards(i);
-                
 
-                function displayCards(i) {
-                    var restInfo = {
-                        name: response.restaurants[i].restaurant.name,
-                        address: response.restaurants[i].restaurant.location.address,
-                        cuisine: response.restaurants[i].restaurant.cuisines,
-                        menuLink: response.restaurants[i].restaurant.menu_url,
-                        rating: response.restaurants[i].restaurant.user_rating.aggregate_rating,
-                        cost: response.restaurants[i].restaurant.average_cost_for_two,
-                        photo: response.restaurants[i].restaurant.thumb
-                    };
+                    function displayCards(i) {
+                        var restInfo = {
+                            name: response.restaurants[i].restaurant.name,
+                            address: response.restaurants[i].restaurant.location.address,
+                            cuisine: response.restaurants[i].restaurant.cuisines,
+                            menuLink: response.restaurants[i].restaurant.menu_url,
+                            rating: response.restaurants[i].restaurant.user_rating.aggregate_rating,
+                            cost: response.restaurants[i].restaurant.average_cost_for_two,
+                            photo: response.restaurants[i].restaurant.thumb
+                        };
 
-                    $('.name').text(restInfo.name);
+                        var newCard = $('<div>');
+                        newCard.addClass('newCard','col','s4');
 
-                    var list = $('<ul>');
-                    $(list).append(`<li>Address: ${restInfo.address}</li>
-                    <li>Cuisine: ${restInfo.cuisine}</li>
-                    <li>Average Cost for Two: ${restInfo.cost}</li>
-                    <li>Avg. Rating: ${restInfo.rating}</li>`);
+                        newCard.append(`<div class="card small">
+                                  <div class="card-image waves-effect waves-block waves-light">
+                                 <img id="image" class="activator" src="${restInfo.photo}">
+                             </div>
+                             <div class="card-content">
+                                 <span class="card-title activator grey-text text-darken-4">${restInfo.name}
+                                     <i class="material-icons right">more_vert</i>
+                                 </span>
+                                 <p>
+                                     <a target="_blank" href="${restInfo.menuLink}">View Menu</a>
+                                 </p>
+                             </div>
+                             <div class="card-reveal">
+                                 <span class="card-title grey-text text-darken-4">${restInfo.name}
+                                     <i class="material-icons right">close</i>
+                                 </span>
+                            <ul>
+                                        <li>Address: ${restInfo.address}</li>
+                                    <li>Cuisine: ${restInfo.cuisine}</li>
+                                    <li>Average Cost for Two: ${restInfo.cost}</li>
+                                     <li>Avg. Rating: ${restInfo.rating}</li>
+                                   </ul>
+                                   </div>
+                                       </div>`);
 
-                    $('#info').html(list);
-                    $('#image').attr('src', restInfo.photo);
-                    $('#link').attr('href', restInfo.menuLink);
 
-                    $('#card').appendTo('#card-display');
+                        newCard.appendTo('#card-display');
 
-                    $('#card').show(1500);
-
+                    }
                 }
-            }
+                $('#card-display').show(2000);
             })
         });
     };

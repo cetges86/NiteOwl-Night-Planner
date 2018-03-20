@@ -53,8 +53,13 @@ img {
     max-width: 300px;
 }
 
-#card {
-    max-width:300px;
+#card-display {
+    margin-top: 4vh;
+}
+
+.newCard {
+    display: inline-block;
+    margin: 0px 10px;
 }
 
 
