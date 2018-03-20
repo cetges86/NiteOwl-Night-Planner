@@ -5,7 +5,8 @@ $(document).ready(function () {
     var myLong;
 
     $('#icons').hide();
-    $('#card').hide();
+    $('#back').hide();
+    $('#card-display').hide();
 
     function findLocation() {
 
@@ -36,8 +37,9 @@ $(document).ready(function () {
     findLocation();
 
     $('#icons').hide();
+    $('#back').hide();
 
-    $('#submit').click(function () {
+    $('#submit').click(function (event) {
         event.preventDefault();
         var name = $('#first_name').val().trim();
 
@@ -65,7 +67,7 @@ $(document).ready(function () {
             method: "Get"
         }).then(function (response) {
 
-            $('.fas').on('click', function () {
+            $('.fas').on('click', function (event) {
                 var type = $(this).attr('id')
                 $('#icons').hide();
                 $('#card-display').hide();
@@ -118,6 +120,7 @@ $(document).ready(function () {
                     }
                 }
                 $('#card-display').show(2000);
+                $('#back').show();
             })
         });
     };
