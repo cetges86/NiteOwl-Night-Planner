@@ -8,6 +8,18 @@ $(document).ready(function () {
     $('#back').hide();
     $('#card-display').hide();
 
+    var config = {
+        apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
+        authDomain: "teamaviato-30f76.firebaseapp.com",
+        databaseURL: "https://teamaviato-30f76.firebaseio.com",
+        projectId: "teamaviato-30f76",
+        storageBucket: "teamaviato-30f76.appspot.com",
+        messagingSenderId: "552400961206"
+      };
+      firebase.initializeApp(config);
+
+      var database = firebase.database();
+
     function findLocation() {
 
         var options = {
@@ -55,7 +67,7 @@ $(document).ready(function () {
 
         $('#inputs').hide();
         $('#icons').show(1500);
-        setTimeout(restaurantsInfo, 1500);
+        setTimeout(restaurantsInfo, 1000);
     })
 
 
@@ -66,13 +78,13 @@ $(document).ready(function () {
             url: queryURL,
             method: "Get"
         }).then(function (response) {
-
-            $('.fas').on('click', function (event) {
+            console.log(response);
+            $('.choice').on('click', function (event) {
                 var type = $(this).attr('id')
                 $('#icons').hide();
                 $('#card-display').hide();
 
-                for (var i = 0; i < 10; i++) {
+                for (var i = 0; i < 20; i++) {
                     displayCards(i);
 
                     function displayCards(i) {
@@ -85,9 +97,13 @@ $(document).ready(function () {
                             cost: response.restaurants[i].restaurant.average_cost_for_two,
                             photo: response.restaurants[i].restaurant.thumb
                         };
+                        
+                        if (restInfo.photo === ""){
+                            restInfo.photo = "assets/images/nuts.jpg"
+                        }
 
                         var newCard = $('<div>');
-                        newCard.addClass('newCard','col','s4');
+                        newCard.addClass('newCard', 'col', 's4');
 
                         newCard.append(`<div class="card small">
                                   <div class="card-image waves-effect waves-block waves-light">
@@ -121,9 +137,22 @@ $(document).ready(function () {
                 }
                 $('#card-display').show(2000);
                 $('#back').show();
+                goBack();
             })
         });
     };
+
+
+    function goBack() {
+        $(document).on('click','.back-btn', function (event) {
+            $('#card-display').empty();
+            $('#icons').show(1500);
+            $('#back').hide();
+
+        });
+    };
+
+     
 
 
 });
