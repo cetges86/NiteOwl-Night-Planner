@@ -13,6 +13,10 @@ body {
     font-size: 8rem;
 }
 
+.back-btn {
+    font-size: 5rem;
+}
+
 .fas:hover {
     color:#124daa;
     transition: 1s;
@@ -64,6 +68,11 @@ img {
     display: inline-block;
     margin: 0px 10px;
     width: 235px;
+}
+
+#plus {
+    font-size: 2rem;
+    color:#124daa;
 }
 
 
