@@ -200,7 +200,7 @@ $(document).ready(function () {
                                         <li>Address: ${brewInfo.street}</li>
                                     <li>Reviews: ${brewInfo.review}</li>
                                     <li>Website: ${brewInfo.URL}</li>
-                                     <li>Photos: ${restInfo.image}</li>
+                                     <li>Photos: ${brewInfo.image}</li>
                                    </ul>
                                    </div>
                                        </div>`);
