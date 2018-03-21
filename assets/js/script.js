@@ -68,6 +68,7 @@ $(document).ready(function () {
         $('#inputs').hide();
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
+        breweryInfo();
     })
 
 
@@ -140,7 +141,7 @@ $(document).ready(function () {
                     $('#card-display').show(2000);
                     $('#back').show();
                     goBack();
-                } else if (type ==="beer"){
+                } else if (type === "beer") {
                     //Lei's code goes here
                 }
             })
@@ -156,33 +157,33 @@ $(document).ready(function () {
         var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + myCity + '&s=json'
         $.ajax({
             url: queryURL,
-            method:'GET'
-        }).then(function(response) {
+            method: 'GET'
+        }).then(function (response) {
             console.log(response);
-            
+
             $('#beer').on('click', function (event) {
                 var type = $(this).attr('id')
                 $('#icons').hide();
                 $('#card-display').hide();
 
-                for (var i = 0; i < 10; i++) {
+                for (var i = 0; i < 20; i++) {
                     displayCards(i);
 
                     function displayCards(i) {
                         var brewInfo = {
-                            name: response.name,
-                            street: response.street,
-                            review: response.reviewLink,
-                            URL: response.url,
-                            image: response.imageCount
+                            name: response[i].name,
+                            street: response[i].street,
+                            review: response[i].reviewlink,
+                            URL: response[i].url,
+                            image: response[i].imageCount
                         };
-                       
+
                         var newCard = $('<div>');
-                        newCard.addClass('newCard','col','s4');
+                        newCard.addClass('newCard', 'col', 's4');
 
                         newCard.append(`<div class="card small">
                                   <div class="card-image waves-effect waves-block waves-light">
-                                 <img id="image" class="activator" src="${brewInfo.image}">
+                                 <img id="image" class="activator" src="assets/images/nuts.jpg">
                              </div>
                              <div class="card-content">
                                  <span class="card-title activator grey-text text-darken-4">${brewInfo.name}
@@ -199,7 +200,7 @@ $(document).ready(function () {
                             <ul>
                                         <li>Address: ${brewInfo.street}</li>
                                     <li>Reviews: ${brewInfo.review}</li>
-                                    <li>Website: ${brewInfo.URL}</li>
+                                    <li>Website: <a href="${brewInfo.URL}">Link</li>
                                      <li>Photos: ${brewInfo.image}</li>
                                    </ul>
                                    </div>
@@ -210,13 +211,14 @@ $(document).ready(function () {
 
                     }
                 }
-            });  
                 $('#card-display').show(2000);
                 $('#back').show();
-            })
-        };
-        breweryInfo();
-    });    
+                goBack();
+            });
+        })
+    };
+
+
 
     function goBack() {
         $(document).on('click', '.back-btn', function (event) {
