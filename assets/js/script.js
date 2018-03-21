@@ -3,10 +3,11 @@ $(document).ready(function () {
 
     var myLat;
     var myLong;
+    var zip;
 
     $('#icons').hide();
     $('#back').hide();
-    $('#card-display').hide();
+    // $('#card-display').hide();
 
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
@@ -57,7 +58,7 @@ $(document).ready(function () {
 
         var email = $('#email').val().trim();
 
-        var zip = $('#zip').val().trim();
+        zip = $('#zip').val().trim();
 
         console.log(name);
         console.log(email);
@@ -69,7 +70,7 @@ $(document).ready(function () {
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
         breweryInfo();
-    })
+    });
 
 
 
@@ -80,7 +81,7 @@ $(document).ready(function () {
             method: "Get"
         }).then(function (response) {
             console.log(response);
-            $('.choice').on('click', function (event) {
+            $('#food').on('click', function (event) {
                 var type = $(this).attr('id')
                 $('#icons').hide();
                 $('#card-display').hide();
@@ -142,13 +143,11 @@ $(document).ready(function () {
                     $('#back').show();
                     goBack();
                 } else if (type === "beer") {
-                    //Lei's code goes here
+                    breweryInfo();
                 }
             })
         });
     };
-
-    // created var myCity 
 
 
     var myCity = "denver";
@@ -231,7 +230,24 @@ $(document).ready(function () {
 
 
     //movies API call
-    //API KEY: de46577094f744569cfeeb5144541ab3
+    //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
+
+    $('#movies').on('click', function (event) {
+        $('#icons').hide();
+        console.log(zip);
+        movieTimes();
+
+        function movieTimes() {
+            var queryURL = 'http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-21&zip=' + zip + '&api_key=3ds9gdyq4eu8mya6kmf6uv5g'
+            $.ajax({
+                url: queryURL,
+                method: 'GET'
+            }).then(function (response) {
+                console.log(response)
+
+            });
+        };
+    })
 
 
 });
