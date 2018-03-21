@@ -11,7 +11,7 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P"
         crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=BioRhyme" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=BioRhyme" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
@@ -21,7 +21,34 @@
 
 <body>
 
-    <div class="container">
+    <div id='itinerary' class='col s3 left'>
+        <ul class="collapsible" data-collapsible="accordion" id="eventList">
+            <li>
+                <div class="collapsible-header">
+                    First
+                </div>
+                <div class="collapsible-body">
+                    <span>Lorem ipsum dolor sit amet.</span>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <i class="material-icons">place</i>Second</div>
+                <div class="collapsible-body">
+                    <span>Lorem ipsum dolor sit amet.</span>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <i class="material-icons">whatshot</i>Third</div>
+                <div class="collapsible-body">
+                    <span>Lorem ipsum dolor sit amet.</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container col s9 left">
         <div id="nameDisplay"></div>
 
         <div id="inputs" class="valign-wrapper">
@@ -65,14 +92,20 @@
 
         <div class="row">
             <div id="back">
-                    <i class="fas fa-arrow-alt-circle-left"></i>
+                <i class="fas fa-arrow-alt-circle-left"></i>
             </div>
 
         </div>
 
+
+
         <div id="card-display">
         </div>
+
+
     </div>
+
+
 
 
 

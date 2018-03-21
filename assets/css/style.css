@@ -6,6 +6,12 @@ body {
     height:768px;
 }
 
+#itinerary{
+    background-color: lime;
+    width: 200px;
+    min-height: 100vh;
+}
+
 
 .fas{
     color: gray;
@@ -70,6 +76,7 @@ img {
     display: inline-block;
     margin: 0px 10px;
 }
+
 
 
 

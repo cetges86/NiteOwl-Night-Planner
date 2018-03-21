@@ -8,12 +8,15 @@ $(document).ready(function () {
     $('#back').hide();
     $('#card-display').hide();
 
+
+    $('.collapsible').collapsible();
+
     function findLocation() {
 
         var options = {
             enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
+            timeout: 100000,
+            maximumAge: 60000
         };
 
         function success(pos) {
@@ -34,10 +37,27 @@ $(document).ready(function () {
 
     }
 
+    function addToNight() {
+        $('#itinerary').on('click', function (event) {
+            var newItem = $('<li>');
+            newItem.append(`<div class="collapsible-header">
+            First
+        </div>
+        <div class="collapsible-body">
+            <span>Lorem ipsum dolor sit amet.</span>
+        </div>
+    </li>`);
+            newItem.appendTo('#eventList');
+        });
+
+    };
+
     findLocation();
+    addToNight();
 
     $('#icons').hide();
     $('#back').hide();
+    $('#itinerary').hide();
 
     $('#submit').click(function (event) {
         event.preventDefault();
@@ -55,6 +75,7 @@ $(document).ready(function () {
 
         $('#inputs').hide();
         $('#icons').show(1500);
+        $('#itinerary').show(1500);
         setTimeout(restaurantsInfo, 1500);
     })
 
@@ -87,7 +108,7 @@ $(document).ready(function () {
                         };
 
                         var newCard = $('<div>');
-                        newCard.addClass('newCard','col','s4');
+                        newCard.addClass('newCard', 'col', 's4');
 
                         newCard.append(`<div class="card small">
                                   <div class="card-image waves-effect waves-block waves-light">
