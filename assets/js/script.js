@@ -8,6 +8,18 @@ $(document).ready(function () {
     $('#back').hide();
     $('#card-display').hide();
 
+    var config = {
+        apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
+        authDomain: "teamaviato-30f76.firebaseapp.com",
+        databaseURL: "https://teamaviato-30f76.firebaseio.com",
+        projectId: "teamaviato-30f76",
+        storageBucket: "teamaviato-30f76.appspot.com",
+        messagingSenderId: "552400961206"
+    };
+    firebase.initializeApp(config);
+
+    var database = firebase.database();
+
     function findLocation() {
 
         var options = {
@@ -55,7 +67,7 @@ $(document).ready(function () {
 
         $('#inputs').hide();
         $('#icons').show(1500);
-        setTimeout(restaurantsInfo, 1500);
+        setTimeout(restaurantsInfo, 1000);
     })
 
 
@@ -66,30 +78,34 @@ $(document).ready(function () {
             url: queryURL,
             method: "Get"
         }).then(function (response) {
-
-            $('.fas').on('click', function (event) {
+            console.log(response);
+            $('.choice').on('click', function (event) {
                 var type = $(this).attr('id')
                 $('#icons').hide();
                 $('#card-display').hide();
+                if (type === "food") {
+                    for (var i = 0; i < 20; i++) {
+                        displayCards(i);
 
-                for (var i = 0; i < 10; i++) {
-                    displayCards(i);
+                        function displayCards(i) {
+                            var restInfo = {
+                                name: response.restaurants[i].restaurant.name,
+                                address: response.restaurants[i].restaurant.location.address,
+                                cuisine: response.restaurants[i].restaurant.cuisines,
+                                menuLink: response.restaurants[i].restaurant.menu_url,
+                                rating: response.restaurants[i].restaurant.user_rating.aggregate_rating,
+                                cost: response.restaurants[i].restaurant.average_cost_for_two,
+                                photo: response.restaurants[i].restaurant.thumb
+                            };
 
-                    function displayCards(i) {
-                        var restInfo = {
-                            name: response.restaurants[i].restaurant.name,
-                            address: response.restaurants[i].restaurant.location.address,
-                            cuisine: response.restaurants[i].restaurant.cuisines,
-                            menuLink: response.restaurants[i].restaurant.menu_url,
-                            rating: response.restaurants[i].restaurant.user_rating.aggregate_rating,
-                            cost: response.restaurants[i].restaurant.average_cost_for_two,
-                            photo: response.restaurants[i].restaurant.thumb
-                        };
+                            if (restInfo.photo === "") {
+                                restInfo.photo = "assets/images/nuts.jpg"
+                            }
 
-                        var newCard = $('<div>');
-                        newCard.addClass('newCard','col','s4');
+                            var newCard = $('<div>');
+                            newCard.addClass('newCard', 'col', 's4');
 
-                        newCard.append(`<div class="card small">
+                            newCard.append(`<div class="card small">
                                   <div class="card-image waves-effect waves-block waves-light">
                                  <img id="image" class="activator" src="${restInfo.photo}">
                              </div>
@@ -111,21 +127,28 @@ $(document).ready(function () {
                                     <li>Average Cost for Two: ${restInfo.cost}</li>
                                      <li>Avg. Rating: ${restInfo.rating}</li>
                                    </ul>
+                                   <i id="plus" class="right-align material-icons">add_circle</i>
                                    </div>
                                        </div>`);
 
 
-                        newCard.appendTo('#card-display');
+                            newCard.appendTo('#card-display');
 
+                        }
                     }
+
+                    $('#card-display').show(2000);
+                    $('#back').show();
+                    goBack();
+                } else if (type ==="beer"){
+                    //Lei's code goes here
                 }
-                $('#card-display').show(2000);
-                $('#back').show();
             })
         });
     };
 
     // created var myCity 
+
 
     var myCity = "denver";
 
@@ -194,3 +217,17 @@ $(document).ready(function () {
         };
         breweryInfo();
     });    
+
+    function goBack() {
+        $(document).on('click', '.back-btn', function (event) {
+            $('#card-display').empty();
+            $('#icons').show(1500);
+            $('#back').hide();
+
+        });
+    };
+
+
+
+
+});
