@@ -147,6 +147,76 @@ $(document).ready(function () {
         });
     };
 
+    // created var myCity 
+
+
+    var myCity = "denver";
+
+    function breweryInfo() {
+        var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + myCity + '&s=json'
+        $.ajax({
+            url: queryURL,
+            method:'GET'
+        }).then(function(response) {
+            console.log(response);
+            
+            $('#beer').on('click', function (event) {
+                var type = $(this).attr('id')
+                $('#icons').hide();
+                $('#card-display').hide();
+
+                for (var i = 0; i < 10; i++) {
+                    displayCards(i);
+
+                    function displayCards(i) {
+                        var brewInfo = {
+                            name: response.name,
+                            street: response.street,
+                            review: response.reviewLink,
+                            URL: response.url,
+                            image: response.imageCount
+                        };
+                       
+                        var newCard = $('<div>');
+                        newCard.addClass('newCard','col','s4');
+
+                        newCard.append(`<div class="card small">
+                                  <div class="card-image waves-effect waves-block waves-light">
+                                 <img id="image" class="activator" src="${brewInfo.image}">
+                             </div>
+                             <div class="card-content">
+                                 <span class="card-title activator grey-text text-darken-4">${brewInfo.name}
+                                     <i class="material-icons right">more_vert</i>
+                                 </span>
+                                 <p>
+                                     <a target="_blank" href="${brewInfo.review}">Reviews</a>
+                                 </p>
+                             </div>
+                             <div class="card-reveal">
+                                 <span class="card-title grey-text text-darken-4">${brewInfo.name}
+                                     <i class="material-icons right">close</i>
+                                 </span>
+                            <ul>
+                                        <li>Address: ${brewInfo.street}</li>
+                                    <li>Reviews: ${brewInfo.review}</li>
+                                    <li>Website: ${brewInfo.URL}</li>
+                                     <li>Photos: ${restInfo.image}</li>
+                                   </ul>
+                                   </div>
+                                       </div>`);
+
+
+                        newCard.appendTo('#card-display');
+
+                    }
+                }
+            });  
+                $('#card-display').show(2000);
+                $('#back').show();
+            })
+        };
+        breweryInfo();
+    });    
 
     function goBack() {
         $(document).on('click', '.back-btn', function (event) {
