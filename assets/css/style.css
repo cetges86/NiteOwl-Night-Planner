@@ -46,12 +46,6 @@ input {
     box-shadow: 0 1px 0 0#124daa !important;
   }
 
-  input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px black inset;
-}
-
-
-
 h5 {
     color:lightgray;
     font-family: 'BioRhyme', serif;
@@ -69,6 +63,7 @@ img {
 .newCard {
     display: inline-block;
     margin: 0px 10px;
+    width: 235px;
 }
 
 
