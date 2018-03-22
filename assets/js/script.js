@@ -70,6 +70,7 @@ $(document).ready(function () {
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
         breweryInfo();
+        movieTimes();
     });
 
 
@@ -232,22 +233,26 @@ $(document).ready(function () {
     //movies API call
     //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
 
+    //MUST UPDATE TO TODAY'S DATE, OTHERWISE NO RESPONSE GIVEN
+
     $('#movies').on('click', function (event) {
         $('#icons').hide();
-        console.log(zip);
         movieTimes();
-
-        function movieTimes() {
-            var queryURL = 'http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-21&zip=' + zip + '&api_key=3ds9gdyq4eu8mya6kmf6uv5g'
-            $.ajax({
-                url: queryURL,
-                method: 'GET'
-            }).then(function (response) {
-                console.log(response)
-
-            });
-        };
     })
+
+    function movieTimes() {
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-22&zip=${zip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+
+        console.log(zip)
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+        }).then(function (response) {
+            console.log(zip)
+            console.log(response)
+
+        });
+    };
 
 
 });
