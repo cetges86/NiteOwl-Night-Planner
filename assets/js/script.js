@@ -3,14 +3,18 @@ $(document).ready(function () {
 
     var myLat;
     var myLong;
+
     var myZip;
     var enteredLat;
     var enteredLong;
     var enteredCity;
 
+    
+
+
     $('#icons').hide();
     $('#back').hide();
-    $('#card-display').hide();
+    // $('#card-display').hide();
 
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
@@ -60,7 +64,7 @@ $(document).ready(function () {
 
         var email = $('#email').val().trim();
 
-        var zip = $('#zip').val().trim();
+        myZip = $('#zip').val().trim();
 
         var newUser = {
             userName: name,
@@ -80,7 +84,7 @@ $(document).ready(function () {
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
         breweryInfo();
-        myZip = zip;
+       
         });
     
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
@@ -99,6 +103,9 @@ $(document).ready(function () {
     };
     
 
+        movieTimes();
+    });
+
     function restaurantsInfo() {
         zipToLocation(enteredLat)
         console.log(enteredLat);
@@ -116,7 +123,7 @@ $(document).ready(function () {
             method: "Get"
         }).then(function (response) {
             console.log(response);
-            $('.choice').on('click', function (event) {
+            $('#food').on('click', function (event) {
                 var type = $(this).attr('id')
                 $('#icons').hide();
                 $('#card-display').hide();
@@ -178,13 +185,11 @@ $(document).ready(function () {
                     $('#back').show();
                     goBack();
                 } else if (type === "beer") {
-                    //Lei's code goes here
+                    breweryInfo();
                 }
             })
         });
     };
-
-    // created var myCity 
 
 
     var myCity = "denver";
@@ -270,7 +275,63 @@ $(document).ready(function () {
 
 
     //movies API call
-    //API KEY: de46577094f744569cfeeb5144541ab3
+    //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
+
+    //MUST UPDATE TO TODAY'S DATE, OTHERWISE NO RESPONSE GIVEN
+
+    $('#movies').on('click', function (event) {
+        $('#icons').hide();
+        movieTimes();
+    })
+
+    function movieTimes() {
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-22&zip=${zip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+
+        console.log(zip)
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+        }).then(function (response) {
+            console.log(response)
+            for (var i = 0; i < 20; i++) {
+
+                var movieInfo = {
+                    posterImage:response[i].preferredImage.uri,
+                    title:response[i].title,
+                    rated:response[i].ratings[0].code,
+                    theatres: theatre[],
+                    showtimes: function showtimes(){
+                        for (var j=0;j <response[i].showtimes.length;j++){
+                            
+                        }
+                    }
+                }
+
+                var newCard = $('<div>');
+                newCard.addClass('newCard', 'col', 's4');
+
+                newCard.append(`<div class="col s12 m7">
+                        <div class="card horizontal">
+                          <div class="card-image">
+                            <img src="${movieInfo.posterImage}">
+                          </div>
+                          <div class="card-stacked">
+                            <div class="card-content">
+                              <p>I am a very simple card. I am good at containing small bits of information.</p>
+                            </div>
+                            <div class="card-action">
+                              <a href="#">This is a link</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`);
+
+
+                newCard.appendTo('#card-display');
+            }
+
+        });
+    };
 
 
 });
