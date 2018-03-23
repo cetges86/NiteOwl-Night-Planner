@@ -248,8 +248,43 @@ $(document).ready(function () {
             url: queryURL,
             method: 'GET'
         }).then(function (response) {
-            console.log(zip)
             console.log(response)
+            for (var i = 0; i < 20; i++) {
+
+                var movieInfo = {
+                    posterImage:response[i].preferredImage.uri,
+                    title:response[i].title,
+                    rated:response[i].ratings[0].code,
+                    theatres: theatre[],
+                    showtimes: function showtimes(){
+                        for (var j=0;j <response[i].showtimes.length;j++){
+                            
+                        }
+                    }
+                }
+
+                var newCard = $('<div>');
+                newCard.addClass('newCard', 'col', 's4');
+
+                newCard.append(`<div class="col s12 m7">
+                        <div class="card horizontal">
+                          <div class="card-image">
+                            <img src="${movieInfo.posterImage}">
+                          </div>
+                          <div class="card-stacked">
+                            <div class="card-content">
+                              <p>I am a very simple card. I am good at containing small bits of information.</p>
+                            </div>
+                            <div class="card-action">
+                              <a href="#">This is a link</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`);
+
+
+                newCard.appendTo('#card-display');
+            }
 
         });
     };
