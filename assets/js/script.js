@@ -3,7 +3,14 @@ $(document).ready(function () {
 
     var myLat;
     var myLong;
-    var zip;
+
+    var myZip;
+    var enteredLat;
+    var enteredLong;
+    var enteredCity;
+
+    
+
 
     $('#icons').hide();
     $('#back').hide();
@@ -51,14 +58,21 @@ $(document).ready(function () {
 
     $('#icons').hide();
     $('#back').hide();
-
     $('#submit').click(function (event) {
         event.preventDefault();
         var name = $('#first_name').val().trim();
 
         var email = $('#email').val().trim();
 
-        zip = $('#zip').val().trim();
+        myZip = $('#zip').val().trim();
+
+        var newUser = {
+            userName: name,
+            userEmail: email,
+            userZip: zip
+        };
+
+        database.ref().push(newUser)
 
         console.log(name);
         console.log(email);
@@ -70,13 +84,40 @@ $(document).ready(function () {
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
         breweryInfo();
+       
+        });
+    
+    // will need to add functionality to pull database info for now can't pass the variables back out to use globally
+    function zipToLocation(enteredLat, enteredLong, enteredCity){
+        var queryURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + myZip + ',US'
+        $.ajax({
+            url: queryURL,
+            method: "Get"
+        }).then(function (response) {
+            console.log(response)
+            enteredLat = response.results[0].geometry.location.lat;
+            enteredLong = response.results[0].geometry.location.lng;
+            enteredCity = response.results[0].address_components[1].long_name;
+        // need to pass enteredLat and enteredLong values to be defined by the info entered by user
+        });
+    };
+    
+
         movieTimes();
     });
 
-
-
     function restaurantsInfo() {
-        var queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
+        zipToLocation(enteredLat)
+        console.log(enteredLat);
+        console.log(enteredLong);
+        var queryURL = ''
+        if (myLat === undefined && myLong === undefined){
+            zipToLocation()
+            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
+        }
+        else {
+            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
+        };
         $.ajax({
             url: queryURL,
             method: "Get"
@@ -154,6 +195,8 @@ $(document).ready(function () {
     var myCity = "denver";
 
     function breweryInfo() {
+        zipToLocation(enteredCity);
+        console.log(enteredCity);
         var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + myCity + '&s=json'
         $.ajax({
             url: queryURL,
@@ -162,6 +205,7 @@ $(document).ready(function () {
             console.log(response);
 
             $('#beer').on('click', function (event) {
+                zipToLocation();
                 var type = $(this).attr('id')
                 $('#icons').hide();
                 $('#card-display').hide();
