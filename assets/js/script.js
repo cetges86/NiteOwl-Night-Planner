@@ -9,7 +9,7 @@ $(document).ready(function () {
     var enteredLong;
     var enteredCity;
 
-    
+    $('.collapsible').collapsible();
 
 
     $('#icons').hide();
@@ -24,6 +24,7 @@ $(document).ready(function () {
         storageBucket: "teamaviato-30f76.appspot.com",
         messagingSenderId: "552400961206"
     };
+
     firebase.initializeApp(config);
 
     var database = firebase.database();
@@ -84,11 +85,11 @@ $(document).ready(function () {
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
         breweryInfo();
-       
-        });
-    
+
+    });
+
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
-    function zipToLocation(enteredLat, enteredLong, enteredCity){
+    function zipToLocation(enteredLat, enteredLong, enteredCity) {
         var queryURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + myZip + ',US'
         $.ajax({
             url: queryURL,
@@ -98,20 +99,19 @@ $(document).ready(function () {
             enteredLat = response.results[0].geometry.location.lat;
             enteredLong = response.results[0].geometry.location.lng;
             enteredCity = response.results[0].address_components[1].long_name;
-        // need to pass enteredLat and enteredLong values to be defined by the info entered by user
+            // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
-    
 
-        movieTimes();
-    });
+
+
 
     function restaurantsInfo() {
         zipToLocation(enteredLat)
         console.log(enteredLat);
         console.log(enteredLong);
         var queryURL = ''
-        if (myLat === undefined && myLong === undefined){
+        if (myLat === undefined && myLong === undefined) {
             zipToLocation()
             queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
         }
@@ -193,7 +193,7 @@ $(document).ready(function () {
 
 
     var myCity = "denver";
-
+    //brewery needs city name
     function breweryInfo() {
         zipToLocation(enteredCity);
         console.log(enteredCity);
@@ -285,53 +285,86 @@ $(document).ready(function () {
     })
 
     function movieTimes() {
-        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-22&zip=${zip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-22&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
-        console.log(zip)
+        console.log(myZip)
         $.ajax({
             url: queryURL,
             method: 'GET'
         }).then(function (response) {
             console.log(response)
+
             for (var i = 0; i < 20; i++) {
+                $('#showtimes').empty();
+                var times = [];
+                var theater = [];
+                var link = [];
+                getShowtimes(i);
+
+                function getShowtimes(i) {
+                    for (var j = 0; j < response[i].showtimes.length; j++) {
+                        times.push(response[i].showtimes[j].dateTime)
+                        theater.push(response[i].showtimes[j].theatre.name)
+                        link.push(response[i].showtimes[j].ticketURI)
+                    }
+
+                };
+
 
                 var movieInfo = {
-                    posterImage:response[i].preferredImage.uri,
-                    title:response[i].title,
-                    rated:response[i].ratings[0].code,
-                    theatres: theatre[],
-                    showtimes: function showtimes(){
-                        for (var j=0;j <response[i].showtimes.length;j++){
-                            
-                        }
+                    posterImage: response[i].preferredImage.uri,
+                    title: response[i].title,
+                    rated: response[i].ratings[0].code,
+                    plot: response[i].shortDescription,
+                    site: response[i].officialUrl
+                }
+
+
+                var newCard = $('<div>');
+                newCard.addClass('newCard', 'col', 's12');
+
+                newCard.append(`<div class="card horizontal">
+            <div class="card-image">
+              <img src="http://developer.tmsimg.com/${movieInfo.posterImage}">
+            </div>
+            <div class="card-stacked">
+              <div class="card-content">
+              <h5>${movieInfo.title}</h5>
+                <p>${movieInfo.plot}</p>
+                
+              </div>
+              <div class="card-action">
+                <a href="${movieInfo.site}">Official Site</a>
+              </div>
+              <ul class="collapsible">
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">local_movies</i>Showtimes</div>
+                      <div id="showtimes" class="collapsible-body"></div>
+                    </li>  
+                     </ul>
+            </div>
+          </div>`);
+
+                console.log(times);
+                var count = times.length;
+                displayShowtimes(count);
+
+                function displayShowtimes(count) {
+                    for (var k = 0; k < count; k++) {
+                        var timeDisplay = $('<p>')
+                        timeDisplay.append(`<a target="_blank" href="${link[k]}">${times[k]} @ ${theater[k]}</a>`)
+                        timeDisplay.appendTo('#showtimes');
                     }
                 }
 
-                var newCard = $('<div>');
-                newCard.addClass('newCard', 'col', 's4');
-
-                newCard.append(`<div class="col s12 m7">
-                        <div class="card horizontal">
-                          <div class="card-image">
-                            <img src="${movieInfo.posterImage}">
-                          </div>
-                          <div class="card-stacked">
-                            <div class="card-content">
-                              <p>I am a very simple card. I am good at containing small bits of information.</p>
-                            </div>
-                            <div class="card-action">
-                              <a href="#">This is a link</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>`);
-
 
                 newCard.appendTo('#card-display');
+                $('.collapsible').collapsible();
             }
-
-        });
-    };
-
+        })
+        $('#card-display').show(2000);
+        $('#back').show();
+        goBack();
+    }
 
 });
