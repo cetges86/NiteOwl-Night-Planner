@@ -88,7 +88,7 @@ $(document).ready(function () {
         });
     
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
-    function zipToLocation(enteredLat, enteredLong, enteredCity){
+    function zipToLocation(){
         var queryURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + myZip + ',US'
         $.ajax({
             url: queryURL,
@@ -98,16 +98,17 @@ $(document).ready(function () {
             enteredLat = response.results[0].geometry.location.lat;
             enteredLong = response.results[0].geometry.location.lng;
             enteredCity = response.results[0].address_components[1].long_name;
+            console.log(enteredLat)
         // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
     
-
+        zipToLocation();
         movieTimes();
-    });
+    
 
     function restaurantsInfo() {
-        zipToLocation(enteredLat)
+        zipToLocation()
         console.log(enteredLat);
         console.log(enteredLong);
         var queryURL = ''
@@ -285,7 +286,7 @@ $(document).ready(function () {
     })
 
     function movieTimes() {
-        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-22&zip=${zip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-22&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
         console.log(zip)
         $.ajax({
@@ -299,7 +300,7 @@ $(document).ready(function () {
                     posterImage:response[i].preferredImage.uri,
                     title:response[i].title,
                     rated:response[i].ratings[0].code,
-                    theatres: theatre[],
+                    theatres: theatre,
                     showtimes: function showtimes(){
                         for (var j=0;j <response[i].showtimes.length;j++){
                             
