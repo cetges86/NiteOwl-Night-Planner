@@ -1,13 +1,12 @@
 $(document).ready(function () {
 
-
+    // global variables
     var myLat;
     var myLong;
+    var myCity = "denver";
+    var myDestination = {};
 
-    $('#icons').hide();
-    $('#back').hide();
-    $('#card-display').hide();
-
+    // firebase
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
         authDomain: "teamaviato-30f76.firebaseapp.com",
@@ -17,62 +16,29 @@ $(document).ready(function () {
         messagingSenderId: "552400961206"
     };
     firebase.initializeApp(config);
-
     var database = firebase.database();
 
+    // get user location
     function findLocation() {
-
         var options = {
             enableHighAccuracy: true,
             timeout: 10000,
             maximumAge: 0
         };
-
         function success(pos) {
             var crd = pos.coords;
-
             myLat = crd.latitude;
             myLong = crd.longitude;
-
             console.log("my latitude: " + crd.latitude);
             console.log("my longitude: " + crd.longitude);
         };
         function error(err) {
             console.warn('ERROR(' + err.code + '): ' + err.message);
-
         };
-
         navigator.geolocation.getCurrentPosition(success, error, options);
-
     }
 
-    findLocation();
-
-    $('#icons').hide();
-    $('#back').hide();
-
-    $('#submit').click(function (event) {
-        event.preventDefault();
-        var name = $('#first_name').val().trim();
-
-        var email = $('#email').val().trim();
-
-        var zip = $('#zip').val().trim();
-
-        console.log(name);
-        console.log(email);
-        var nameDisplay = (`<h5> ${name} </h5>`);
-        $('#nameDisplay').append(nameDisplay).fadeIn(2000);
-
-
-        $('#inputs').hide();
-        $('#icons').show(1500);
-        setTimeout(restaurantsInfo, 1000);
-        breweryInfo();
-    })
-
-
-
+    // find restaurants based on user location and display cards
     function restaurantsInfo() {
         var queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
         $.ajax({
@@ -104,7 +70,7 @@ $(document).ready(function () {
                             }
 
                             var newCard = $('<div>');
-                            newCard.addClass('newCard', 'col', 's4');
+                            newCard.addClass('newCard', 'col', 's4', i);
 
                             newCard.append(`<div class="card small">
                                   <div class="card-image waves-effect waves-block waves-light">
@@ -128,7 +94,7 @@ $(document).ready(function () {
                                     <li>Average Cost for Two: ${restInfo.cost}</li>
                                      <li>Avg. Rating: ${restInfo.rating}</li>
                                    </ul>
-                                   <i id="plus" class="right-align material-icons">add_circle</i>
+                                   <i id="plus" data-name="${restInfo.name}" data-addr = "${restInfo.address}"class="right-align material-icons addButton">add_circle</i>
                                    </div>
                                        </div>`);
 
@@ -141,6 +107,7 @@ $(document).ready(function () {
                     $('#card-display').show(2000);
                     $('#back').show();
                     goBack();
+
                 } else if (type === "beer") {
                     //Lei's code goes here
                 }
@@ -148,10 +115,27 @@ $(document).ready(function () {
         });
     };
 
-    // created var myCity 
 
+    function addToNight() {
+        $(document).on('click', '.addButton', function (event) {
+            console.log(this);
+            var restName = $(this).attr('data-name');
+            var restAddr = $(this).attr('data-addr');
+            console.log(restName);
 
-    var myCity = "denver";
+            var newItem = $('<li>');
+            newItem.append(`<div class="collapsible-header">
+            ` + restName + `
+        </div>
+        <div class="collapsible-body">
+            <span>` + restAddr + `</span>
+        </div>
+        </li>`);
+            newItem.appendTo('#eventList');
+        });
+
+    };
+
 
     function breweryInfo() {
         var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + myCity + '&s=json'
@@ -218,8 +202,6 @@ $(document).ready(function () {
         })
     };
 
-
-
     function goBack() {
         $(document).on('click', '.back-btn', function (event) {
             $('#card-display').empty();
@@ -229,6 +211,37 @@ $(document).ready(function () {
         });
     };
 
+
+findLocation();
+addToNight();
+
+$('#icons').hide();
+$('#back').hide();
+$('#card-display').hide();
+$('#itinerary').hide();
+
+//    $('.collapsible').collapsible();
+
+$('#submit').click(function (event) {
+    event.preventDefault();
+    var name = $('#first_name').val().trim();
+
+    var email = $('#email').val().trim();
+
+    var zip = $('#zip').val().trim();
+
+    console.log(name);
+    console.log(email);
+    var nameDisplay = (`<h5> ${name} </h5>`);
+    $('#nameDisplay').append(nameDisplay).fadeIn(2000);
+
+
+    $('#inputs').hide();
+    $('#icons').show(1500);
+    $('#itinerary').show(1500);
+    setTimeout(restaurantsInfo, 1000);
+    breweryInfo();
+})
 
     //movies API call
     //API KEY: de46577094f744569cfeeb5144541ab3
