@@ -9,13 +9,6 @@ $(document).ready(function () {
     var enteredLong;
     var enteredCity;
 
-    $('.collapsible').collapsible();
-
-
-    $('#icons').hide();
-    $('#back').hide();
-    // $('#card-display').hide();
-
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
         authDomain: "teamaviato-30f76.firebaseapp.com",
@@ -59,8 +52,16 @@ $(document).ready(function () {
 
     $('#icons').hide();
     $('#back').hide();
+
+    $('.btn-large').on('click',function(event){
+        $('#title').fadeOut(2000);
+        $('#inputs').show(1500);
+    });
+
+
     $('#submit').click(function (event) {
         event.preventDefault();
+        $('#inputs').hide();
         var name = $('#first_name').val().trim();
 
         var email = $('#email').val().trim();
@@ -184,9 +185,7 @@ $(document).ready(function () {
                     $('#card-display').show(2000);
                     $('#back').show();
                     goBack();
-                } else if (type === "beer") {
-                    breweryInfo();
-                }
+                } 
             })
         });
     };
@@ -285,7 +284,7 @@ $(document).ready(function () {
     })
 
     function movieTimes() {
-        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-22&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-23&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
         console.log(myZip)
         $.ajax({
