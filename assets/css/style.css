@@ -12,9 +12,15 @@ body {
     width: 200px;
     min-height: 100vh;
 }
+
+
 #title {
     text-align: center;
 
+}
+
+#icons {
+    margin-right:10%;
 }
 
 
