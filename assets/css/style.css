@@ -6,8 +6,15 @@ body {
     height:768px;
 }
 
+
+#itinerary{
+    background-color: lime;
+    width: 200px;
+    min-height: 100vh;
+}
 #title {
     text-align: center;
+
 }
 
 
@@ -80,6 +87,7 @@ img {
     font-size: 2rem;
     color:#124daa;
 }
+
 
 
 

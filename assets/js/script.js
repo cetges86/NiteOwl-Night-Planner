@@ -22,12 +22,15 @@ $(document).ready(function () {
 
     var database = firebase.database();
 
+
+    $('.collapsible').collapsible();
+
     function findLocation() {
 
         var options = {
             enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
+            timeout: 100000,
+            maximumAge: 60000
         };
 
         function success(pos) {
@@ -48,15 +51,38 @@ $(document).ready(function () {
 
     }
 
+    function addToNight() {
+        $('#itinerary').on('click', function (event) {
+            var newItem = $('<li>');
+            newItem.append(`<div class="collapsible-header">
+            First
+        </div>
+        <div class="collapsible-body">
+            <span>Lorem ipsum dolor sit amet.</span>
+        </div>
+    </li>`);
+            newItem.appendTo('#eventList');
+        });
+
+    };
+
     findLocation();
+    addToNight();
 
     $('#icons').hide();
     $('#back').hide();
 
+
+
+    $('#itinerary').hide();
+
+
     $('.btn-large').on('click', function (event) {
+
         $('#title').fadeOut(2000);
         $('#inputs').show(1500);
     });
+
 
 
     $('#submit').click(function (event) {
@@ -84,11 +110,20 @@ $(document).ready(function () {
 
         $('#inputs').hide();
         $('#icons').show(1500);
-        setTimeout(restaurantsInfo, 1000);
+        $('#itinerary').show(1500);
+        setTimeout(restaurantsInfo, 1500);
         breweryInfo();
+        nightList();
         zipToLocation();
+        movieTimes();
+    })
 
+
+       
+        });
+    
     });
+
 
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
 
@@ -110,7 +145,6 @@ $(document).ready(function () {
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
-
 
 
     function restaurantsInfo() {
