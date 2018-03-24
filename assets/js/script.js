@@ -299,7 +299,7 @@ $(document).ready(function () {
                     posterImage:response[i].preferredImage.uri,
                     title:response[i].title,
                     rated:response[i].ratings[0].code,
-                    theatres: theatre[],
+                    theatres: theatre=[],
                     showtimes: function showtimes(){
                         for (var j=0;j <response[i].showtimes.length;j++){
                             
@@ -333,5 +333,5 @@ $(document).ready(function () {
         });
     };
 
-
+ 
 });
