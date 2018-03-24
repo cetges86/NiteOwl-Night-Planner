@@ -3,14 +3,14 @@ $(document).ready(function () {
     // global variables
     var myLat;
     var myLong;
-    var myCity = "denver";
-    var myDestination = {};
+    // var myDestination = {};
 
 
     var myZip;
     var enteredLat;
     var enteredLong;
     var enteredCity;
+    var enteredState;
 
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
@@ -106,7 +106,6 @@ $(document).ready(function () {
         $('#inputs').hide();
         $('#icons').show(1500);
         $('#itinerary').show(1500);
-        breweryInfo();
         zipToLocation();
 
     })
@@ -124,13 +123,15 @@ $(document).ready(function () {
             enteredLat = response.results[0].geometry.location.lat;
             enteredLong = response.results[0].geometry.location.lng;
             enteredCity = response.results[0].address_components[1].long_name;
+            enteredState = response.results[0].address_components[3].short_name;
+
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
 
             console.log(enteredCity);
             console.log(enteredLat);
             console.log(enteredLong);
-            
+
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
@@ -149,7 +150,7 @@ $(document).ready(function () {
 
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
-            
+
             queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&radius=8000&apikey=1186480d6decb5529b6df0ca0c638be9'
         }
         else {
@@ -246,99 +247,90 @@ $(document).ready(function () {
     };
 
 
-    var myCity = "denver";
-    var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
-    //brewery needs city name
-    // created brewApi local variable 
+    $('#beer').on('click', function (event) {
+        $('#icons').hide();
+        breweryInfo();
+    });
+
 
     function breweryInfo() {
         zipToLocation();
         console.log(enteredCity);
-        var queryURL = 'https://beermapping.com/webservice/loccity/' + brewApi + myCity + '&s=json'
+        var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
+        var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
         $.ajax({
             url: queryURL,
             method: 'GET'
         }).then(function (response) {
             console.log(response);
+            for (var i = 0; i < 20; i++) {
+                displayCards(i);
+
+                function displayCards(i) {
+                    var brewInfo = {
+                        name: response[i].name,
+                        street: response[i].street,
+                        city: response[i].city,
+                        state: response[i].state,
+                        review: response[i].overall,
+                        URL: response[i].url,
+                        placeId: response[i].id,
+                        type: response[i].status,
+                        hasImage: response[i].imagecount
+                    };
+
+                    if (brewInfo.type != "Beer Store") {
+                        // var image = "";
+                        // var queryURL = 'http://beermapping.com/webservice/locimage/' + brewApi + brewInfo.placeId + '&s=json'
+                        // $.ajax({
+                        //     url: queryURL,
+                        //     method: 'GET'
+                        // }).then(function (response) {
+                        //     console.log(response)
+                        //     image = response[0].imageurl;
+
+                            var newCard = $('<div>');
+                            newCard.addClass('newCard', 'col', 's4');
+
+                            newCard.append(`<div class="card small">
+                                      <div class="card-image waves-effect waves-block waves-light">
+                                     <img id="image" class="activator" src="${image}">
+                                 </div>
+                                 <div class="card-content">
+                                     <span class="card-title activator grey-text text-darken-4">${brewInfo.name}
+                                         <i class="material-icons right">more_vert</i>
+                                     </span>
+                                     <p>
+                                         <a target="_blank" href="${brewInfo.review}">Reviews</a>
+                                     </p>
+                                 </div>
+                                 <div class="card-reveal">
+                                     <span class="card-title grey-text text-darken-4">${brewInfo.name}
+                                         <i class="material-icons right">close</i>
+                                     </span>
+                                <ul>
+                                            <li>Address: ${brewInfo.street}<br>
+                                            ${brewInfo.city}, ${brewInfo.state}</li>
+                                        <li>Reviews: ${brewInfo.review}</li>
+    
+                                        <li>Website: <a target= "_blank" href="http://www.${brewInfo.URL}">Link</a></li>
+    
+                                        <i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i>
+                                       </ul>
+                                       </div>
+                                           </div>`);
 
 
-            $('#beer').on('click', function (event) {
-                zipToLocation();
-                var type = $(this).attr('id')
-                $('#icons').hide();
-                $('#card-display').hide();
-
-                for (var i = 0; i < 20; i++) 
-                    // if statement excluding "Beer Stores" from displaying
-                    // if(response[i].status(0)=== "Beer Store") {
-
-            
-
-                var placeId = 19866;
-                var queryURL = 'http://beermapping.com/webservice/locimage/' + brewApi + placeId + '&s=json'
-                $.ajax({
-                    url: queryURL,
-                    method: 'GET'
-                }).then(function (response) {
-                    console.log(response)
-
-                    displayCards(i);
-
-
-                    function displayCards(i) {
-                        var brewInfo = {
-                            name: response[i].name,
-                            street: response[i].street,
-                            city: response[i].city,
-                            state: response[i].state,
-                            review: response[i].overall,
-                            URL: response[i].url,
-                            image: response[i].imageCount
-                        };
-
-                        var newCard = $('<div>');
-                        newCard.addClass('newCard', 'col', 's4');
-
-                        newCard.append(`<div class="card small">
-                                  <div class="card-image waves-effect waves-block waves-light">
-                                 <img id="image" class="activator" src="assets/images/nuts.jpg">
-                             </div>
-                             <div class="card-content">
-                                 <span class="card-title activator grey-text text-darken-4">${brewInfo.name}
-                                     <i class="material-icons right">more_vert</i>
-                                 </span>
-                                 <p>
-                                     <a target="_blank" href="${brewInfo.review}">Reviews</a>
-                                 </p>
-                             </div>
-                             <div class="card-reveal">
-                                 <span class="card-title grey-text text-darken-4">${brewInfo.name}
-                                     <i class="material-icons right">close</i>
-                                 </span>
-                            <ul>
-                                        <li>Address: ${brewInfo.street}<br>
-                                        ${brewInfo.city}, ${brewInfo.state}</li>
-                                    <li>Reviews: ${brewInfo.review}</li>
-
-                                    <li>Website: <a target= "_blank" href="http://www.${brewInfo.URL}">Link</a></li>
-
-                                    <i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i>
-                                   </ul>
-                                   </div>
-                                       </div>`);
-
-
-                        newCard.appendTo('#card-display');
-
+                            newCard.appendTo('#card-display');
+                        
                     }
+                }
+            }
 
-                    $('#card-display').show(2000);
-                    $('#back').show();
-                    goBack();
-                });
-            })
-        }
-            )
+            $('#card-display').show(2000);
+            $('#back').show();
+            goBack();
+        })
     };
 
     function goBack() {
@@ -362,7 +354,9 @@ $(document).ready(function () {
 
     function movieTimes() {
 
-        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-23&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+        var today = moment().format("YYYY-MM-DD");
+
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
         console.log(myZip)
         $.ajax({
@@ -376,8 +370,6 @@ $(document).ready(function () {
                 var times = [];
                 var theater = [];
                 var link = [];
-
-
 
                 var movieInfo = {
                     posterImage: response[i].preferredImage.uri,
@@ -408,6 +400,7 @@ $(document).ready(function () {
                     </div>
                 </div>`);
 
+                newCard.appendTo('#card-display');
 
                 // getShowtimes(i);
 
@@ -418,23 +411,7 @@ $(document).ready(function () {
                 //         link.push(response[i].showtimes[j].ticketURI)
                 //     }
 
-                // };
-
-                var movieInfo = {
-                    posterImage: response[i].preferredImage.uri,
-                    title: response[i].title,
-                    rated: response[i].ratings[0].code,
-                    theatres: theatre = [],
-                    showtimes: function showtimes() {
-                        for (var j = 0; j < response[i].showtimes.length; j++) {
-
-                        }
-                    }
-                }
-
-
-                var newCard = $('<div>');
-                newCard.addClass('newCard', 'col', 's12');
+                // }
 
                 //     newCard.append(`<div class="card horizontal">
                 //     <div class="card-image">
@@ -458,24 +435,9 @@ $(document).ready(function () {
                 //     </div>
                 //         </div>`);
                 //date needs to be updated dynamically
-                newCard.append(`<div class="row">
-                    <div class="col s12">
-                        <div class="card blue-grey darken-1">
-                            <div class="card-content white-text">
-                                <span class="card-title">${movieInfo.title}</span>
-                                <p>${movieInfo.plot}</p>                                
-                                <i id="plus" data-name="${movieInfo.title}" data-addr = "${date}"class="right-align material-icons addButton">add_circle</i>
 
-                            </div>
-                            <div class="card-action">
-                                <a target= "_blank" href="${movieInfo.site}">Official Site</a>
-                                <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>`);
 
-                console.log(times);
+
                 // var count = times.length;
                 // displayShowtimes(count);
 
@@ -487,18 +449,18 @@ $(document).ready(function () {
                 //     }
                 // }
             };
-
-
-        
+            $('#card-display').show(2000);
+            $('#back').show();
+            goBack();
         })
     }
 
 
-        // (function(){
-        // emailjs.init("user_nBhzUHHAwwNgqgg5DqXtt");
-        // })();
-        // emailjs.send("<gmail>","<template_jo7UwrFB>",{name: "", notes: "Check this out!"});
-    
+    // (function(){
+    // emailjs.init("user_nBhzUHHAwwNgqgg5DqXtt");
+    // })();
+    // emailjs.send("<gmail>","<template_jo7UwrFB>",{name: "", notes: "Check this out!"});
+
 
 
 
