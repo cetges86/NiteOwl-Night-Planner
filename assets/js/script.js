@@ -21,8 +21,7 @@ $(document).ready(function () {
     firebase.initializeApp(config);
 
     var database = firebase.database();
-
-
+    
     $('.collapsible').collapsible();
 
     function findLocation() {
@@ -71,9 +70,7 @@ $(document).ready(function () {
 
     $('#icons').hide();
     $('#back').hide();
-
-
-
+    
     $('#itinerary').hide();
 
 
