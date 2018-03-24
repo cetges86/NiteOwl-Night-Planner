@@ -113,7 +113,7 @@ $(document).ready(function () {
 
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
 
-    function zipToLocation(enteredLat, enteredLong, enteredCity) {
+    function zipToLocation() {
 
         var queryURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + myZip + ',US'
         $.ajax({
@@ -143,13 +143,13 @@ $(document).ready(function () {
     })
 
     function restaurantsInfo() {
-
+        zipToLocation();
         console.log(enteredLat);
         console.log(enteredLong);
 
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
-            zipToLocation();
+            
             queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&radius=8000&apikey=1186480d6decb5529b6df0ca0c638be9'
         }
         else {
