@@ -223,8 +223,6 @@ $(document).ready(function () {
         });
     };
 
-
-
     function addToNight() {
         $(document).on('click', '.addButton', function (event) {
             console.log(this);
@@ -252,7 +250,7 @@ $(document).ready(function () {
     function breweryInfo() {
         zipToLocation(enteredCity);
         console.log(enteredCity);
-        var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + myCity + '&s=json'
+        var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + enteredCity + '&s=json'
         $.ajax({
             url: queryURL,
             method: 'GET'
