@@ -223,8 +223,6 @@ $(document).ready(function () {
         });
     };
 
-
-
     function addToNight() {
         $(document).on('click', '.addButton', function (event) {
             console.log(this);
@@ -252,7 +250,11 @@ $(document).ready(function () {
     function breweryInfo() {
         zipToLocation(enteredCity);
         console.log(enteredCity);
+<<<<<<< HEAD
         var queryURL = 'https://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + myCity + '&s=json'
+=======
+        var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + enteredCity + '&s=json'
+>>>>>>> e799e60211161a739985cf364478eb5eeffb98ef
         $.ajax({
             url: queryURL,
             method: 'GET'
@@ -304,7 +306,7 @@ $(document).ready(function () {
                                         <li>Address: ${brewInfo.street}<br>
                                         ${brewInfo.city}, ${brewInfo.state}</li>
                                     <li>Reviews: ${brewInfo.review}</li>
-                                    <li>Website: <a href="${brewInfo.URL}">Link</a></li>
+                                    <li>Website: <a target= "_blank" href="${brewInfo.URL}">Link</a></li>
                                     <i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i>
                                    </ul>
                                    </div>
@@ -334,8 +336,6 @@ $(document).ready(function () {
     //movies API call
     //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
 
-    //MUST UPDATE TO TODAY'S DATE, OTHERWISE NO RESPONSE GIVEN
-
     $('#movies').on('click', function (event) {
         $('#icons').hide();
         movieTimes();
@@ -343,7 +343,9 @@ $(document).ready(function () {
 
     function movieTimes() {
 
-        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-23&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+        var today = moment().format("YYYY-MM-DD");
+
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
         console.log(myZip)
         $.ajax({
@@ -358,6 +360,49 @@ $(document).ready(function () {
                 var theater = [];
                 var link = [];
 
+                
+                var movieInfo = {
+<<<<<<< HEAD
+                    posterImage:response[i].preferredImage.uri,
+                    title:response[i].title,
+                    rated:response[i].ratings[0].code,
+                    theatres: theatre=[],
+                    showtimes: function showtimes(){
+                        for (var j=0;j <response[i].showtimes.length;j++){
+                            
+                        }
+                    }
+=======
+                    posterImage: response[i].preferredImage.uri,
+                    title: response[i].title,
+                    rated: response[i].ratings[0].code,
+                    plot: response[i].shortDescription,
+                    site: response[i].officialUrl,
+                    tickets: response[i].showtimes[0].ticketURI
+>>>>>>> e799e60211161a739985cf364478eb5eeffb98ef
+                }
+                
+                var newCard = $('<div>');
+                newCard.addClass('newCard', 'col', 's12');
+                newCard.append(`<div class="row">
+                    <div class="col s12">
+                        <div class="card blue-grey lighten-5">
+                            <div class="card-content">
+                                <span class="card-title">${movieInfo.title}</span>
+                                <p>${movieInfo.plot}</p>            
+                                <br>                    
+                                <i id="plus" data-name="${movieInfo.title}" class="right-align material-icons addButton">add_circle</i>
+
+                            </div>
+                            <div class="card-action">
+                                <a target= "_blank" href="${movieInfo.site}">Official Site</a><br>
+                                <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+
+
                 // getShowtimes(i);
 
                 // function getShowtimes(i) {
@@ -368,22 +413,6 @@ $(document).ready(function () {
                 //     }
 
                 // };
-
-                var movieInfo = {
-                    posterImage:response[i].preferredImage.uri,
-                    title:response[i].title,
-                    rated:response[i].ratings[0].code,
-                    theatres: theatre=[],
-                    showtimes: function showtimes(){
-                        for (var j=0;j <response[i].showtimes.length;j++){
-                            
-                        }
-                    }
-                }
-
-
-                var newCard = $('<div>');
-                newCard.addClass('newCard', 'col', 's12');
 
                 //     newCard.append(`<div class="card horizontal">
                 //     <div class="card-image">
@@ -407,24 +436,8 @@ $(document).ready(function () {
                 //     </div>
                 //         </div>`);
                 //date needs to be updated dynamically
-                newCard.append(`<div class="row">
-                    <div class="col s12">
-                        <div class="card blue-grey darken-1">
-                            <div class="card-content white-text">
-                                <span class="card-title">${movieInfo.title}</span>
-                                <p>${movieInfo.plot}</p>                                
-                                <i id="plus" data-name="${movieInfo.title}" data-addr = "${date}"class="right-align material-icons addButton">add_circle</i>
 
-                            </div>
-                            <div class="card-action">
-                                <a target= "_blank" href="${movieInfo.site}">Official Site</a>
-                                <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>`);
 
-                console.log(times);
                 // var count = times.length;
                 // displayShowtimes(count);
 
@@ -437,5 +450,17 @@ $(document).ready(function () {
                 // }
 
 
+<<<<<<< HEAD
  
+=======
+                newCard.appendTo('#card-display');
+            }
+        })
+        $('#card-display').show(2000);
+        $('#back').show();
+        goBack();
+    }
+
+
+>>>>>>> e799e60211161a739985cf364478eb5eeffb98ef
 });
