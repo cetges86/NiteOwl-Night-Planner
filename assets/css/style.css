@@ -19,6 +19,10 @@ body {
     font-size: 8rem;
 }
 
+.back-btn {
+    font-size: 5rem;
+}
+
 .fas:hover {
     color:#124daa;
     transition: 1s;
@@ -52,12 +56,6 @@ input {
     box-shadow: 0 1px 0 0#124daa !important;
   }
 
-  input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px black inset;
-}
-
-
-
 h5 {
     color:lightgray;
     font-family: 'BioRhyme', serif;
@@ -75,6 +73,12 @@ img {
 .newCard {
     display: inline-block;
     margin: 0px 10px;
+    width: 235px;
+}
+
+#plus {
+    font-size: 2rem;
+    color:#124daa;
 }
 
 
