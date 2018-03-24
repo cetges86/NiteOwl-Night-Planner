@@ -7,6 +7,23 @@ body {
 }
 
 
+#itinerary{
+    background-color:black;
+    width: 200px;
+    min-height: 100vh;
+}
+
+
+#title {
+    text-align: center;
+
+}
+
+#icons {
+    margin-right:10%;
+}
+
+
 .fas{
     color: gray;
     margin: 0 auto;
@@ -50,7 +67,9 @@ input {
     box-shadow: 0 1px 0 0#124daa !important;
   }
 
-h5 {
+
+
+p, h1, h4, h5 {
     color:lightgray;
     font-family: 'BioRhyme', serif;
 
@@ -74,6 +93,7 @@ img {
     font-size: 2rem;
     color:#124daa;
 }
+
 
 
 

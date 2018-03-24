@@ -20,13 +20,57 @@
 </head>
 
 <body>
+    <div class="col s12">
 
-    <div class="container">
+        <div id='itinerary' class='col s3 left'>
+
+            <ul class="collapsible" data-collapsible="accordion" id="eventList">
+            </ul>
+
+            <div class="container">
+                <li>
+                    <div class="collapsible-header">
+                        First
+                    </div>
+                    <div class="collapsible-body">
+                        <span>Lorem ipsum dolor sit amet.</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">place</i>Second</div>
+                    <div class="collapsible-body">
+                        <span>Lorem ipsum dolor sit amet.</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">whatshot</i>Third</div>
+                    <div class="collapsible-body">
+                        <span>Lorem ipsum dolor sit amet.</span>
+                    </div>
+                </li>
+                </ul>
+            </div>
+        </div>
+
+
         <div id="nameDisplay"></div>
+        <div id="title" class="valign-wrapper">
+            <div class="row">
+                <div class="col s12">
+                    <h4>Welcome to</h4>
+                    <h1>NiteOwl Night Planner</h1>
+                    <h5>Plan your perfect evening</h5>
+                    <p>Use location for best results</p>
+                    <a class="waves-effect waves-light btn-large">Click to Begin</a>
+                </div>
+            </div>
+        </div>
 
         <div id="inputs" class="valign-wrapper">
             <div class="row">
-                <div class="col s4"></div>
+                <div class="col s3"></div>
                 <form class="col s8 center-align">
                     <div class="row center-align">
                         <div class="input-field col s8">
@@ -59,7 +103,7 @@
         <div id="icons" class="valign-wrapper hidden">
             <i id="food" class="choice fas fa-utensils"></i>
             <i id="beer" class="choice fas fa-beer"></i>
-            <i id="concert" class="choice fas fa-music"></i>
+            <!-- <i id="concert" class="choice fas fa-music"></i> -->
             <i id="movies" class="choice fas fa-ticket-alt"></i>
         </div>
 
@@ -68,9 +112,9 @@
                 <i class="back-btn fas fa-arrow-alt-circle-left"></i>
             </div>
 
-        </div>
+            <div id="card-display" class="col s9 right">
+            </div>
 
-        <div id="card-display">
         </div>
     </div>
 
@@ -79,7 +123,12 @@
 
 
 
+
+
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 </body>
 
