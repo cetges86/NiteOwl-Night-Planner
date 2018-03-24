@@ -134,6 +134,7 @@ $(document).ready(function () {
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
+    zipToLocation();
 
 
     $('#food').on('click', function (event) {
@@ -142,6 +143,9 @@ $(document).ready(function () {
     })
 
     function restaurantsInfo() {
+
+        console.log(enteredLat);
+        console.log(enteredLong);
 
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
@@ -246,7 +250,7 @@ $(document).ready(function () {
     //brewery needs city name
 
     function breweryInfo() {
-        zipToLocation(enteredCity);
+        zipToLocation();
         console.log(enteredCity);
         var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + enteredCity + '&s=json'
         $.ajax({
@@ -437,6 +441,12 @@ $(document).ready(function () {
         $('#back').show();
         goBack();
     }
+
+        // (function(){
+        // emailjs.init("user_nBhzUHHAwwNgqgg5DqXtt");
+        // })();
+        // emailjs.send("<gmail>","<template_jo7UwrFB>",{name: "", notes: "Check this out!"});
+    
 
 
 });
