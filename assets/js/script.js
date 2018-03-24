@@ -106,7 +106,6 @@ $(document).ready(function () {
         $('#inputs').hide();
         $('#icons').show(1500);
         $('#itinerary').show(1500);
-        setTimeout(restaurantsInfo, 1500);
         breweryInfo();
         zipToLocation();
 
@@ -127,101 +126,111 @@ $(document).ready(function () {
             enteredCity = response.results[0].address_components[1].long_name;
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
+
+            console.log(enteredCity);
             console.log(enteredLat);
+            console.log(enteredLong);
+            
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
     zipToLocation();
 
+
+    $('#food').on('click', function (event) {
+        $('#icons').hide();
+        restaurantsInfo();
+    })
+
     function restaurantsInfo() {
+
         console.log(enteredLat);
         console.log(enteredLong);
+
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
-            zipToLocation()
-            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
+            zipToLocation();
+            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&radius=8000&apikey=1186480d6decb5529b6df0ca0c638be9'
         }
         else {
-            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&apikey=1186480d6decb5529b6df0ca0c638be9'
+            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&radius=8000&apikey=1186480d6decb5529b6df0ca0c638be9'
         };
+
         $.ajax({
             url: queryURL,
             method: "Get"
         }).then(function (response) {
             console.log(response);
-            $('#food').on('click', function (event) {
-                var type = $(this).attr('id')
-                $('#icons').hide();
-                $('#card-display').hide();
-                if (type === "food") {
-                    for (var i = 0; i < 20; i++) {
-                        displayCards(i);
 
-                        function displayCards(i) {
-                            var restInfo = {
-                                name: response.restaurants[i].restaurant.name,
-                                address: response.restaurants[i].restaurant.location.address,
-                                cuisine: response.restaurants[i].restaurant.cuisines,
-                                menuLink: response.restaurants[i].restaurant.menu_url,
-                                rating: response.restaurants[i].restaurant.user_rating.aggregate_rating,
-                                cost: response.restaurants[i].restaurant.average_cost_for_two,
-                                photo: response.restaurants[i].restaurant.thumb
-                            };
+            $('#card-display').hide();
 
-                            if (restInfo.photo === "") {
-                                restInfo.photo = "assets/images/nuts.jpg"
-                            }
+            for (var i = 0; i < 20; i++) {
+                displayCards(i);
 
-                            var newCard = $('<div>');
-                            newCard.addClass('newCard', 'col', 's4', i);
+                function displayCards(i) {
+                    var restInfo = {
+                        name: response.restaurants[i].restaurant.name,
+                        address: response.restaurants[i].restaurant.location.address,
+                        cuisine: response.restaurants[i].restaurant.cuisines,
+                        menuLink: response.restaurants[i].restaurant.menu_url,
+                        rating: response.restaurants[i].restaurant.user_rating.aggregate_rating,
+                        cost: response.restaurants[i].restaurant.average_cost_for_two,
+                        photo: response.restaurants[i].restaurant.thumb
+                    };
 
-                            newCard.append(`<div class="card small">
-                                  <div class="card-image waves-effect waves-block waves-light">
-                                 <img id="image" class="activator" src="${restInfo.photo}">
-                             </div>
-                             <div class="card-content">
-                                 <span class="card-title activator grey-text text-darken-4">${restInfo.name}
-                                     <i class="material-icons right">more_vert</i>
-                                 </span>
-                                 <p>
-                                     <a target="_blank" href="${restInfo.menuLink}">View Menu</a>
-                                 </p>
-                             </div>
-                             <div class="card-reveal">
-                                 <span class="card-title grey-text text-darken-4">${restInfo.name}
-                                     <i class="material-icons right">close</i>
-                                 </span>
-                            <ul>
-                                        <li>Address: ${restInfo.address}</li>
-                                    <li>Cuisine: ${restInfo.cuisine}</li>
-                                    <li>Average Cost for Two: ${restInfo.cost}</li>
-                                     <li>Avg. Rating: ${restInfo.rating}</li>
-                                   </ul>
-                                   <i id="plus" data-name="${restInfo.name}" data-addr = "${restInfo.address}"class="right-align material-icons addButton">add_circle</i>
-                                   </div>
-                                       </div>`);
-
-
-                            newCard.appendTo('#card-display');
-
-                        }
+                    if (restInfo.photo === "") {
+                        restInfo.photo = "assets/images/nuts.jpg"
                     }
 
-                    $('#card-display').show(2000);
-                    $('#back').show();
-                    goBack();
+                    var newCard = $('<div>');
+                    newCard.addClass('newCard', 'col', 's4', i);
+
+                    newCard.append(`<div class="card small">
+                              <div class="card-image waves-effect waves-block waves-light">
+                             <img id="image" class="activator" src="${restInfo.photo}">
+                         </div>
+                         <div class="card-content">
+                             <span class="card-title activator grey-text text-darken-4">${restInfo.name}
+                                 <i class="material-icons right">more_vert</i>
+                             </span>
+                             <p>
+                                 <a target="_blank" href="${restInfo.menuLink}">View Menu</a>
+                             </p>
+                         </div>
+                         <div class="card-reveal">
+                             <span class="card-title grey-text text-darken-4">${restInfo.name}
+                                 <i class="material-icons right">close</i>
+                             </span>
+                            <ul>
+                                    <li>Address: ${restInfo.address}</li>
+                                <li>Cuisine: ${restInfo.cuisine}</li>
+                                <li>Average Cost for Two: ${restInfo.cost}</li>
+                                 <li>Avg. Rating: ${restInfo.rating}</li>
+                               </ul>
+                               <i id="plus" data-name="${restInfo.name}" data-addr = "${restInfo.address}"class="right-align material-icons addButton">add_circle</i>
+                               </div>
+                                   </div>`);
+
+
+                    newCard.appendTo('#card-display');
 
                 }
-            })
+
+            };
+
+            $('#card-display').show(2000);
+            $('#back').show();
+            goBack();
+
         });
     };
 
+
     function addToNight() {
         $(document).on('click', '.addButton', function (event) {
-            console.log(this);
             var restName = $(this).attr('data-name');
             var restAddr = $(this).attr('data-addr');
-            console.log(restName);
+
 
             var newItem = $('<li>');
             newItem.append(`<div class="collapsible-header">
@@ -293,7 +302,7 @@ $(document).ready(function () {
                                         <li>Address: ${brewInfo.street}<br>
                                         ${brewInfo.city}, ${brewInfo.state}</li>
                                     <li>Reviews: ${brewInfo.review}</li>
-                                    <li>Website: <a target= "_blank" href="${brewInfo.URL}">Link</a></li>
+                                    <li>Website: <a target= "_blank" href="http://www.${brewInfo.URL}">Link</a></li>
                                     <i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i>
                                    </ul>
                                    </div>
@@ -347,7 +356,7 @@ $(document).ready(function () {
                 var theater = [];
                 var link = [];
 
-                
+
                 var movieInfo = {
                     posterImage: response[i].preferredImage.uri,
                     title: response[i].title,
@@ -356,7 +365,7 @@ $(document).ready(function () {
                     site: response[i].officialUrl,
                     tickets: response[i].showtimes[0].ticketURI
                 }
-                
+
                 var newCard = $('<div>');
                 newCard.addClass('newCard', 'col', 's12');
                 newCard.append(`<div class="row">
