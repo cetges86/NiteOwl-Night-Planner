@@ -54,11 +54,11 @@ $(document).ready(function () {
             var newItem = $('<li>');
             newItem.append(`<div class="collapsible-header">
             First
-        </div>
-        <div class="collapsible-body">
+            </div>
+         <div class="collapsible-body">
             <span>Lorem ipsum dolor sit amet.</span>
-        </div>
-    </li>`);
+            </div>
+            </li>`);
             newItem.appendTo('#eventList');
         });
 
@@ -69,12 +69,11 @@ $(document).ready(function () {
 
     $('#icons').hide();
     $('#back').hide();
-    
+    $('#inputs').hide();
     $('#itinerary').hide();
 
 
     $('.btn-large').on('click', function (event) {
-
         $('#title').fadeOut(2000);
         $('#inputs').show(1500);
     });
@@ -83,7 +82,7 @@ $(document).ready(function () {
 
     $('#submit').click(function (event) {
         event.preventDefault();
-        $('#inputs').hide();
+
         var name = $('#first_name').val().trim();
 
         var email = $('#email').val().trim();
@@ -109,16 +108,14 @@ $(document).ready(function () {
         $('#itinerary').show(1500);
         setTimeout(restaurantsInfo, 1500);
         breweryInfo();
-        nightList();
         zipToLocation();
-        movieTimes();
+
     })
 
 
-       
-        });
-    
-    });
+
+
+
 
 
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
@@ -275,7 +272,9 @@ $(document).ready(function () {
                         var brewInfo = {
                             name: response[i].name,
                             street: response[i].street,
-                            review: response[i].reviewlink,
+                            city: response[i].city,
+                            state: response[i].state,
+                            review: response[i].overall,
                             URL: response[i].url,
                             image: response[i].imageCount
                         };
@@ -300,10 +299,11 @@ $(document).ready(function () {
                                      <i class="material-icons right">close</i>
                                  </span>
                             <ul>
-                                        <li>Address: ${brewInfo.street}</li>
+                                        <li>Address: ${brewInfo.street}<br>
+                                        ${brewInfo.city}, ${brewInfo.state}</li>
                                     <li>Reviews: ${brewInfo.review}</li>
-                                    <li>Website: <a href="${brewInfo.URL}">Link</li>
-                                     <li>Photos: ${brewInfo.image}</li>
+                                    <li>Website: <a href="${brewInfo.URL}">Link</a></li>
+                                    <i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i>
                                    </ul>
                                    </div>
                                        </div>`);
@@ -328,38 +328,6 @@ $(document).ready(function () {
 
         });
     };
-
-
-findLocation();
-addToNight();
-
-$('#icons').hide();
-$('#back').hide();
-$('#card-display').hide();
-$('#itinerary').hide();
-
-//    $('.collapsible').collapsible();
-
-$('#submit').click(function (event) {
-    event.preventDefault();
-    var name = $('#first_name').val().trim();
-
-    var email = $('#email').val().trim();
-
-    var zip = $('#zip').val().trim();
-
-    console.log(name);
-    console.log(email);
-    var nameDisplay = (`<h5> ${name} </h5>`);
-    $('#nameDisplay').append(nameDisplay).fadeIn(2000);
-
-
-    $('#inputs').hide();
-    $('#icons').show(1500);
-    $('#itinerary').show(1500);
-    setTimeout(restaurantsInfo, 1000);
-    breweryInfo();
-})
 
     //movies API call
     //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
@@ -433,13 +401,15 @@ $('#submit').click(function (event) {
                 //          </ul>
                 //     </div>
                 //         </div>`);
-
+                //date needs to be updated dynamically
                 newCard.append(`<div class="row">
                     <div class="col s12">
                         <div class="card blue-grey darken-1">
                             <div class="card-content white-text">
                                 <span class="card-title">${movieInfo.title}</span>
-                                <p>${movieInfo.plot}</p>
+                                <p>${movieInfo.plot}</p>                                
+                                <i id="plus" data-name="${movieInfo.title}" data-addr = "${date}"class="right-align material-icons addButton">add_circle</i>
+
                             </div>
                             <div class="card-action">
                                 <a target= "_blank" href="${movieInfo.site}">Official Site</a>
