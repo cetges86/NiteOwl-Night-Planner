@@ -6,6 +6,10 @@ body {
     height:768px;
 }
 
+#title {
+    text-align: center;
+}
+
 
 .fas{
     color: gray;
@@ -50,7 +54,9 @@ input {
     box-shadow: 0 1px 0 0#124daa !important;
   }
 
-h5 {
+
+
+p, h1, h4, h5 {
     color:lightgray;
     font-family: 'BioRhyme', serif;
 
