@@ -86,11 +86,15 @@ $(document).ready(function () {
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
         breweryInfo();
+       zipToLocation();
+        movieTimes();
 
     });
 
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
+
     function zipToLocation(enteredLat, enteredLong, enteredCity) {
+
         var queryURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + myZip + ',US'
         $.ajax({
             url: queryURL,
@@ -100,15 +104,20 @@ $(document).ready(function () {
             enteredLat = response.results[0].geometry.location.lat;
             enteredLong = response.results[0].geometry.location.lng;
             enteredCity = response.results[0].address_components[1].long_name;
+
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
 
-
-
+            console.log(enteredLat)
+        // need to pass enteredLat and enteredLong values to be defined by the info entered by user
+        });
+    };
+    
+      
 
     function restaurantsInfo() {
-        zipToLocation(enteredLat)
+        zipToLocation()
         console.log(enteredLat);
         console.log(enteredLong);
         var queryURL = ''
@@ -284,8 +293,9 @@ $(document).ready(function () {
     })
 
     function movieTimes() {
-        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-23&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
+        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-23&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+        
         console.log(myZip)
         $.ajax({
             url: queryURL,
@@ -311,11 +321,13 @@ $(document).ready(function () {
 
 
                 var movieInfo = {
+
                     posterImage: response[i].preferredImage.uri,
                     title: response[i].title,
                     rated: response[i].ratings[0].code,
                     plot: response[i].shortDescription,
                     site: response[i].officialUrl
+         
                 }
 
 
