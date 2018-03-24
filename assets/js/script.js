@@ -69,9 +69,7 @@ $(document).ready(function () {
 
     $('#icons').hide();
     $('#back').hide();
-
-
-
+    
     $('#itinerary').hide();
 
 
