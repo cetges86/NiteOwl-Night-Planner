@@ -112,12 +112,6 @@ $(document).ready(function () {
 
     })
 
-
-
-
-
-
-
     // will need to add functionality to pull database info for now can't pass the variables back out to use globally
 
     function zipToLocation(enteredLat, enteredLong, enteredCity) {
@@ -133,14 +127,13 @@ $(document).ready(function () {
             enteredCity = response.results[0].address_components[1].long_name;
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
-
-            console.log(enteredLat)
+            console.log(enteredLat);
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
+    zipToLocation();
 
     function restaurantsInfo() {
-        zipToLocation()
         console.log(enteredLat);
         console.log(enteredLong);
         var queryURL = ''
@@ -223,13 +216,6 @@ $(document).ready(function () {
         });
     };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
-=======
->>>>>>> e799e60211161a739985cf364478eb5eeffb98ef
     function addToNight() {
         $(document).on('click', '.addButton', function (event) {
             console.log(this);
@@ -254,12 +240,8 @@ $(document).ready(function () {
     var myCity = "denver";
     //brewery needs city name
 
-<<<<<<< HEAD
->>>>>>> dd4406d7085bddcfc3b39638d41b9b2584df1245
-=======
->>>>>>> e799e60211161a739985cf364478eb5eeffb98ef
     function breweryInfo() {
-        zipToLocation(enteredCity);
+        zipToLocation();
         console.log(enteredCity);
         var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + enteredCity + '&s=json'
         $.ajax({
@@ -450,6 +432,12 @@ $(document).ready(function () {
         $('#back').show();
         goBack();
     }
+
+        // (function(){
+        // emailjs.init("user_nBhzUHHAwwNgqgg5DqXtt");
+        // })();
+        // emailjs.send("<gmail>","<template_jo7UwrFB>",{name: "", notes: "Check this out!"});
+    
 
 
 });
