@@ -13,6 +13,10 @@ body {
     min-height: 100vh;
 }
 
+.collapsible-body {
+    background-color: lightgray;
+}
+
 
 #title {
     text-align: center;
@@ -67,6 +71,10 @@ input {
     box-shadow: 0 1px 0 0#124daa !important;
   }
 
+  .card-title {
+    font-family: 'BioRhyme', serif;
+
+  }
 
 
 p, h1, h4, h5 {
