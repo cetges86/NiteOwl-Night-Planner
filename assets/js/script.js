@@ -53,7 +53,7 @@ $(document).ready(function () {
     $('#icons').hide();
     $('#back').hide();
 
-    $('.btn-large').on('click',function(event){
+    $('.btn-large').on('click', function (event) {
         $('#title').fadeOut(2000);
         $('#inputs').show(1500);
     });
@@ -86,8 +86,7 @@ $(document).ready(function () {
         $('#icons').show(1500);
         setTimeout(restaurantsInfo, 1000);
         breweryInfo();
-       zipToLocation();
-        movieTimes();
+        zipToLocation();
 
     });
 
@@ -106,15 +105,13 @@ $(document).ready(function () {
             enteredCity = response.results[0].address_components[1].long_name;
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
+
+            console.log(enteredLat)
+            // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
 
-            console.log(enteredLat)
-        // need to pass enteredLat and enteredLong values to be defined by the info entered by user
-        });
-    };
-    
-      
+
 
     function restaurantsInfo() {
         zipToLocation()
@@ -194,7 +191,7 @@ $(document).ready(function () {
                     $('#card-display').show(2000);
                     $('#back').show();
                     goBack();
-                } 
+                }
             })
         });
     };
@@ -295,7 +292,7 @@ $(document).ready(function () {
     function movieTimes() {
 
         var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=2018-03-23&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
-        
+
         console.log(myZip)
         $.ajax({
             url: queryURL,
@@ -308,69 +305,82 @@ $(document).ready(function () {
                 var times = [];
                 var theater = [];
                 var link = [];
-                getShowtimes(i);
 
-                function getShowtimes(i) {
-                    for (var j = 0; j < response[i].showtimes.length; j++) {
-                        times.push(response[i].showtimes[j].dateTime)
-                        theater.push(response[i].showtimes[j].theatre.name)
-                        link.push(response[i].showtimes[j].ticketURI)
-                    }
+                // getShowtimes(i);
 
-                };
+                // function getShowtimes(i) {
+                //     for (var j = 0; j < response[i].showtimes.length; j++) {
+                //         times.push(response[i].showtimes[j].dateTime)
+                //         theater.push(response[i].showtimes[j].theatre.name)
+                //         link.push(response[i].showtimes[j].ticketURI)
+                //     }
 
+                // };
 
                 var movieInfo = {
-
                     posterImage: response[i].preferredImage.uri,
                     title: response[i].title,
                     rated: response[i].ratings[0].code,
                     plot: response[i].shortDescription,
-                    site: response[i].officialUrl
-         
+                    site: response[i].officialUrl,
+                    tickets: response[i].showtimes[0].ticketURI
                 }
 
 
                 var newCard = $('<div>');
                 newCard.addClass('newCard', 'col', 's12');
 
-                newCard.append(`<div class="card horizontal">
-            <div class="card-image">
-              <img src="http://developer.tmsimg.com/${movieInfo.posterImage}">
-            </div>
-            <div class="card-stacked">
-              <div class="card-content">
-              <h5>${movieInfo.title}</h5>
-                <p>${movieInfo.plot}</p>
-                
-              </div>
-              <div class="card-action">
-                <a href="${movieInfo.site}">Official Site</a>
-              </div>
-              <ul class="collapsible">
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">local_movies</i>Showtimes</div>
-                      <div id="showtimes" class="collapsible-body"></div>
-                    </li>  
-                     </ul>
-            </div>
-          </div>`);
+                //     newCard.append(`<div class="card horizontal">
+                //     <div class="card-image">
+                //   <img src="http://developer.tmsimg.com/${movieInfo.posterImage}&api_key=+3ds9gdyq4eu8mya6kmf6uv5g+">
+                //         </div>
+                //     <div class="card-stacked">
+                //   <div class="card-content">
+                //   <h5>${movieInfo.title}</h5>
+                //     <p>${movieInfo.plot}</p>
+
+                //   </div>
+                //   <div class="card-action">
+                //     <a href="${movieInfo.site}">Official Site</a>
+                //   </div>
+                //   <ul class="collapsible">
+                //         <li>
+                //           <div class="collapsible-header"><i class="material-icons">local_movies</i>Showtimes</div>
+                //           <div id="${i}" class="collapsible-body"></div>
+                //         </li>  
+                //          </ul>
+                //     </div>
+                //         </div>`);
+
+                newCard.append(`<div class="row">
+                    <div class="col s12">
+                        <div class="card blue-grey darken-1">
+                            <div class="card-content white-text">
+                                <span class="card-title">${movieInfo.title}</span>
+                                <p>${movieInfo.plot}</p>
+                            </div>
+                            <div class="card-action">
+                                <a target= "_blank" href="${movieInfo.site}">Official Site</a>
+                                <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
 
                 console.log(times);
-                var count = times.length;
-                displayShowtimes(count);
+                // var count = times.length;
+                // displayShowtimes(count);
 
-                function displayShowtimes(count) {
-                    for (var k = 0; k < count; k++) {
-                        var timeDisplay = $('<p>')
-                        timeDisplay.append(`<a target="_blank" href="${link[k]}">${times[k]} @ ${theater[k]}</a>`)
-                        timeDisplay.appendTo('#showtimes');
-                    }
-                }
+                // function displayShowtimes(count) {
+                //     for (var k = 0; k < count; k++) {
+                //         var timeDisplay = $('<p>')
+                //         timeDisplay.append(`<a target="_blank" href="${link[k]}">${times[k]} @ ${theater[k]}</a>`)
+                //         timeDisplay.appendTo(`#${i}`);
+                //     }
+                // }
 
 
                 newCard.appendTo('#card-display');
-                $('.collapsible').collapsible();
             }
         })
         $('#card-display').show(2000);
