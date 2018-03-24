@@ -192,13 +192,10 @@ $(document).ready(function () {
         });
     };
 
-
-    var myCity = "denver";
-
     function breweryInfo() {
         zipToLocation(enteredCity);
         console.log(enteredCity);
-        var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + myCity + '&s=json'
+        var queryURL = 'http://beermapping.com/webservice/loccity/ff0222dd8fe6c591c1c40a9656a717d8/' + enteredCity + '&s=json'
         $.ajax({
             url: queryURL,
             method: 'GET'
