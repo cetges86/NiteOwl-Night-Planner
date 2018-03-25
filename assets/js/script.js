@@ -123,7 +123,9 @@ $(document).ready(function () {
             enteredLat = response.results[0].geometry.location.lat;
             enteredLong = response.results[0].geometry.location.lng;
             enteredCity = response.results[0].address_components[1].long_name;
-            enteredState = response.results[0].address_components[3].short_name;
+
+            //BUG - address.components[3] is sometimes "US", not shortname state
+            enteredState = response.results[0].address_components[2].short_name;
 
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
@@ -256,6 +258,7 @@ $(document).ready(function () {
     function breweryInfo() {
         zipToLocation();
         console.log(enteredCity);
+        console.log(enteredState);
         var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
         var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
         $.ajax({
@@ -280,14 +283,18 @@ $(document).ready(function () {
                     };
 
                     if (brewInfo.type != "Beer Store") {
-                        // var image = "";
-                        // var queryURL = 'http://beermapping.com/webservice/locimage/' + brewApi + brewInfo.placeId + '&s=json'
-                        // $.ajax({
-                        //     url: queryURL,
-                        //     method: 'GET'
-                        // }).then(function (response) {
-                        //     console.log(response)
-                        //     image = response[0].imageurl;
+                        var image = "";
+                        var queryURL = 'http://beermapping.com/webservice/locimage/' + brewApi + brewInfo.placeId + '&s=json'
+                        $.ajax({
+                            url: queryURL,
+                            method: 'GET'
+                        }).then(function (response) {
+                            console.log(response)
+                            image = response[0].imageurl;
+
+                            if (image === null) {
+                                image = "assets/images/beer.jpg"
+                            }
 
                             var newCard = $('<div>');
                             newCard.addClass('newCard', 'col', 's4');
@@ -322,17 +329,20 @@ $(document).ready(function () {
 
 
                             newCard.appendTo('#card-display');
-                        
+
+                        })
                     }
+
                 }
-            }
 
-            $('#card-display').show(2000);
-            $('#back').show();
-            goBack();
-        })
+                $('#card-display').show(2000);
+                $('#back').show();
+                goBack();
+
+
+            };
+        });
     };
-
     function goBack() {
         $(document).on('click', '.back-btn', function (event) {
             $('#card-display').empty();
