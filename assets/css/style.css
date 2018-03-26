@@ -80,7 +80,6 @@ input {
 p, h1, h4, h5 {
     color:lightgray;
     font-family: 'BioRhyme', serif;
-
 }
 
 img {
@@ -95,6 +94,14 @@ img {
     display: inline-block;
     margin: 0px 10px;
     width: 235px;
+}
+
+.card-content{
+    overflow: scroll;
+}
+
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating){
+    color:#124daa;
 }
 
 #plus {

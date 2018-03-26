@@ -28,6 +28,8 @@ $(document).ready(function () {
 
 
     function findLocation() {
+        console.log("ran")
+
         var options = {
             enableHighAccuracy: true,
             timeout: 100000,
@@ -64,7 +66,7 @@ $(document).ready(function () {
 
     };
 
-    findLocation();
+
     addToNight();
 
     $('#icons').hide();
@@ -76,6 +78,7 @@ $(document).ready(function () {
     $('.btn-large').on('click', function (event) {
         $('#title').fadeOut(2000);
         $('#inputs').show(1500);
+        findLocation();
     });
 
 
@@ -137,7 +140,7 @@ $(document).ready(function () {
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
-    zipToLocation();
+
 
 
     $('#food').on('click', function (event) {
@@ -147,8 +150,6 @@ $(document).ready(function () {
 
     function restaurantsInfo() {
         zipToLocation();
-        console.log(enteredLat);
-        console.log(enteredLong);
 
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
@@ -366,7 +367,7 @@ $(document).ready(function () {
 
         var today = moment().format("YYYY-MM-DD");
 
-        var queryURL = `http://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
+        var queryURL = `https://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
         console.log(myZip)
         $.ajax({
@@ -374,97 +375,68 @@ $(document).ready(function () {
             method: 'GET'
         }).then(function (response) {
             console.log(response)
+            $('#card-display').hide();
 
             for (var i = 0; i < 20; i++) {
-                $('#showtimes').empty();
-                var times = [];
-                var theater = [];
-                var link = [];
+                displayCards(i);
 
-                var movieInfo = {
-                    posterImage: response[i].preferredImage.uri,
-                    title: response[i].title,
-                    rated: response[i].ratings[0].code,
-                    plot: response[i].shortDescription,
-                    site: response[i].officialUrl,
-                    tickets: response[i].showtimes[0].ticketURI
-                }
+                function displayCards(i) {
 
-                var newCard = $('<div>');
-                newCard.addClass('newCard', 'col', 's12');
-                newCard.append(`<div class="row">
-                    <div class="col s12">
+                    var movieInfo = {
+                        posterImage: response[i].preferredImage.uri,
+                        title: response[i].title,
+                        rated: response[i].ratings[0].code,
+                        plot: response[i].shortDescription,
+                        site: response[i].officialUrl,
+                        tickets: response[i].showtimes[0].ticketURI,
+                        imageHeight: response[i].preferredImage.height,
+                        runTime:response[i].runTime
+                    }
+
+                    var dispRun = movieInfo.runTime.substring(3, movieInfo.runTime.length)
+                    var newCard = $('<div>');
+                    newCard.addClass('newCard');
+                    newCard.addClass('col');
+                    newCard.addClass('s12 m6 l6');
+
+                    newCard.append(`<div class="col s12">
                         <div class="card blue-grey lighten-5">
                             <div class="card-content">
-                                <span class="card-title">${movieInfo.title}</span>
-                                <p>${movieInfo.plot}</p>            
-                                <br>                    
-                                <i id="plus" data-name="${movieInfo.title}" class="right-align material-icons addButton">add_circle</i>
-
+                                <span class="center-align card-title">${movieInfo.title}</span>
+                                <div class= "col s6">
+                                    <img src="http://developer.tmsimg.com/${movieInfo.posterImage}?api_key=3ds9gdyq4eu8mya6kmf6uv5g">
+                                    <p>Runtime: ${dispRun}
+                                </div>
+                                <div class= "col s6">
+                                    <p>${movieInfo.plot}</p> 
+                                    <p>Rated: ${movieInfo.rated}</p>                            
+                                </div>
                             </div>
-                            <div class="card-action">
+                            <div class="card-action col s12">
+                                <div class="col s9">
                                 <a target= "_blank" href="${movieInfo.site}">Official Site</a><br>
                                 <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
+                                </div>
+                                <div class= "col s3 right-align">
+                                <a><i id="plus" data-name="${movieInfo.title}" class="right-align material-icons addButton">add_circle</i></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>`);
+                    </div>`);
 
-                newCard.appendTo('#card-display');
-
-                // getShowtimes(i);
-
-                // function getShowtimes(i) {
-                //     for (var j = 0; j < response[i].showtimes.length; j++) {
-                //         times.push(response[i].showtimes[j].dateTime)
-                //         theater.push(response[i].showtimes[j].theatre.name)
-                //         link.push(response[i].showtimes[j].ticketURI)
-                //     }
-
-                // }
-
-                //     newCard.append(`<div class="card horizontal">
-                //     <div class="card-image">
-                //   <img src="http://developer.tmsimg.com/${movieInfo.posterImage}&api_key=+3ds9gdyq4eu8mya6kmf6uv5g+">
-                //         </div>
-                //     <div class="card-stacked">
-                //   <div class="card-content">
-                //   <h5>${movieInfo.title}</h5>
-                //     <p>${movieInfo.plot}</p>
-
-                //   </div>
-                //   <div class="card-action">
-                //     <a href="${movieInfo.site}">Official Site</a>
-                //   </div>
-                //   <ul class="collapsible">
-                //         <li>
-                //           <div class="collapsible-header"><i class="material-icons">local_movies</i>Showtimes</div>
-                //           <div id="${i}" class="collapsible-body"></div>
-                //         </li>  
-                //          </ul>
-                //     </div>
-                //         </div>`);
-                //date needs to be updated dynamically
-
-
-
-                // var count = times.length;
-                // displayShowtimes(count);
-
-                // function displayShowtimes(count) {
-                //     for (var k = 0; k < count; k++) {
-                //         var timeDisplay = $('<p>')
-                //         timeDisplay.append(`<a target="_blank" href="${link[k]}">${times[k]} @ ${theater[k]}</a>`)
-                //         timeDisplay.appendTo(`#${i}`);
-                //     }
-                // }
+                    var cardHeight = movieInfo.imageHeight - 70;
+                    $('.card-content').css("height", cardHeight);
+                    $('.newCard').css('margin', 0)
+                    newCard.appendTo('#card-display');
+                }
             };
+
+
             $('#card-display').show(2000);
             $('#back').show();
             goBack();
         })
-    }
-
+    };
 
     // (function(){
     // emailjs.init("user_nBhzUHHAwwNgqgg5DqXtt");
