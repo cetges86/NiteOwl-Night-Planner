@@ -264,7 +264,7 @@ $(document).ready(function () {
         console.log(enteredCity);
         console.log(enteredState);
         var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
-        var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity}&s=json`
+        var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
         $.ajax({
             url: queryURL,
             method: 'GET'
@@ -386,13 +386,17 @@ $(document).ready(function () {
                     var movieInfo = {
                         posterImage: response[i].preferredImage.uri,
                         title: response[i].title,
-                        rated: response[i].ratings[0].code,
+                        rated: "Not Rated",
                         plot: response[i].shortDescription,
                         site: response[i].officialUrl,
                         tickets: response[i].showtimes[0].ticketURI,
                         imageHeight: response[i].preferredImage.height,
                         runTime:response[i].runTime
                     }
+
+                    if (response[i].ratings != undefined) {
+                        movieInfo.rated = response[i].ratings[0].code;
+                    };
 
                     var dispRun = movieInfo.runTime.substring(3, movieInfo.runTime.length)
                     var newCard = $('<div>');
