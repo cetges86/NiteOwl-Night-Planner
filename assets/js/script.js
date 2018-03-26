@@ -25,6 +25,8 @@ $(document).ready(function () {
     var database = firebase.database();
 
     $('.collapsible').collapsible();
+    $('.tooltipped').tooltip();
+  
 
 
     function findLocation() {
@@ -128,7 +130,7 @@ $(document).ready(function () {
             enteredCity = response.results[0].address_components[1].long_name;
 
             //BUG - address.components[3] is sometimes "US", not shortname state
-            enteredState = response.results[0].address_components[2].short_name;
+            enteredState = response.results[0].address_components[3].short_name;
 
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
@@ -154,7 +156,7 @@ $(document).ready(function () {
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
 
-            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&radius=8000&apikey=1186480d6decb5529b6df0ca0c638be9'
+            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&radius=3000&apikey=1186480d6decb5529b6df0ca0c638be9'
         }
         else {
             queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&radius=8000&apikey=1186480d6decb5529b6df0ca0c638be9'
@@ -194,7 +196,7 @@ $(document).ready(function () {
                              <img id="image" class="activator" src="${restInfo.photo}">
                          </div>
                          <div class="card-content">
-                             <span class="card-title activator grey-text text-darken-4">${restInfo.name}
+                             <span class="card-title activator text-darken-4">${restInfo.name}
                                  <i class="material-icons right">more_vert</i>
                              </span>
                              <p>
@@ -208,10 +210,10 @@ $(document).ready(function () {
                             <ul>
                                     <li>Address: ${restInfo.address}</li>
                                 <li>Cuisine: ${restInfo.cuisine}</li>
-                                <li>Average Cost for Two: ${restInfo.cost}</li>
+                                <li>Average Cost for Two: $${restInfo.cost}</li>
                                  <li>Avg. Rating: ${restInfo.rating}</li>
                                </ul>
-                               <i id="plus" data-name="${restInfo.name}" data-addr = "${restInfo.address}"class="right-align material-icons addButton">add_circle</i>
+                               <a class="tooltipped" data-position="right" data-tooltip="Add to Night"><i id="plus" data-name="${restInfo.name}" data-addr = "${restInfo.address}"class="right-align material-icons addButton">add_circle</i></a>
                                </div>
                                    </div>`);
 
@@ -221,7 +223,7 @@ $(document).ready(function () {
                 }
 
             };
-
+            $('.tooltipped').tooltip();
             $('#card-display').show(2000);
             $('#back').show();
             goBack();
@@ -237,14 +239,15 @@ $(document).ready(function () {
 
 
             var newItem = $('<li>');
-            newItem.append(`<div class="collapsible-header">
+            newItem.append(`<div class="collapsible-header teal darken-3 white-text">
+            <i class="material-icons right-align">more_horiz</i>
             ` + restName + `
-        </div>
+            </div>
         <div class="collapsible-body">
             <span>` + restAddr + `</span>
         </div>
         </li>`);
-            newItem.appendTo('#eventList');
+            newItem.appendTo('#eventList').fadeIn(1000);
         });
 
     };
@@ -261,7 +264,7 @@ $(document).ready(function () {
         console.log(enteredCity);
         console.log(enteredState);
         var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
-        var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
+        var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity}&s=json`
         $.ajax({
             url: queryURL,
             method: 'GET'
@@ -322,8 +325,9 @@ $(document).ready(function () {
                                         <li>Reviews: ${brewInfo.review}</li>
     
                                         <li>Website: <a target= "_blank" href="http://www.${brewInfo.URL}">Link</a></li>
+                                        <br>
     
-                                        <i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i>
+                                        <a class="tooltipped" data-position="right" data-tooltip="Add to Night"><i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i></a>
                                        </ul>
                                        </div>
                                            </div>`);
@@ -335,12 +339,10 @@ $(document).ready(function () {
                     }
 
                 }
-
+                $('.tooltipped').tooltip();
                 $('#card-display').show(2000);
                 $('#back').show();
                 goBack();
-
-
             };
         });
     };
@@ -349,7 +351,6 @@ $(document).ready(function () {
             $('#card-display').empty();
             $('#icons').show(1500);
             $('#back').hide();
-
         });
     };
 
@@ -418,7 +419,7 @@ $(document).ready(function () {
                                 <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
                                 </div>
                                 <div class= "col s3 right-align">
-                                <a><i id="plus" data-name="${movieInfo.title}" class="right-align material-icons addButton">add_circle</i></a>
+                                <a class="tooltipped" data-position="left" data-tooltip="Add to Night"><i id="plus" data-name="${movieInfo.title}" data-addr="${movieInfo.rated}, ${dispRun}" class="right-align material-icons addButton">add_circle</i></a>
                                 </div>
                             </div>
                         </div>
@@ -431,7 +432,7 @@ $(document).ready(function () {
                 }
             };
 
-
+            $('.tooltipped').tooltip();
             $('#card-display').show(2000);
             $('#back').show();
             goBack();
