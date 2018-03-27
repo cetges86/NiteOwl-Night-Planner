@@ -77,11 +77,15 @@ input {
     box-shadow: 0 1px 0 0#124daa !important;
   }
 
-  .card-title, li {
+  .card-title{
     font-family: 'BioRhyme', serif;
-
+    font-size: 1.2rem !important;
+    font-weight: bold;
   }
 
+  li {
+    font-family: 'BioRhyme', serif;
+  }
 
 p, h1, h4, h5 {
     color:lightgray;
