@@ -104,7 +104,7 @@ $(document).ready(function () {
 
         console.log(name);
         console.log(email);
-        var nameDisplay = (`<h5> ${name} </h5>`);
+        var nameDisplay = (`<h5> ${name}'s Night </h5>`);
         $('#nameDisplay').append(nameDisplay).fadeIn(2000);
 
 
@@ -157,9 +157,8 @@ $(document).ready(function () {
         if (myLat === undefined && myLong === undefined) {
 
             queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + enteredLat + '&lon=' + enteredLong + '&radius=3000&apikey=1186480d6decb5529b6df0ca0c638be9'
-        }
-        else {
-            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&radius=8000&apikey=1186480d6decb5529b6df0ca0c638be9'
+        } else {
+            queryURL = 'https://developers.zomato.com/api/v2.1/search?lat=' + myLat + '&lon=' + myLong + '&radius=3000&apikey=1186480d6decb5529b6df0ca0c638be9'
         };
 
         $.ajax({
@@ -270,7 +269,7 @@ $(document).ready(function () {
             method: 'GET'
         }).then(function (response) {
             console.log(response);
-            for (var i = 0; i < 20; i++) {
+            for (var i = 0; i < response.length; i++) {
                 displayCards(i);
 
                 function displayCards(i) {
@@ -279,7 +278,7 @@ $(document).ready(function () {
                         street: response[i].street,
                         city: response[i].city,
                         state: response[i].state,
-                        review: response[i].overall,
+                        review: response[i].reviewlink,
                         URL: response[i].url,
                         placeId: response[i].id,
                         type: response[i].status,
@@ -288,7 +287,7 @@ $(document).ready(function () {
 
                     if (brewInfo.type != "Beer Store") {
                         var image = "";
-                        var queryURL = 'http://beermapping.com/webservice/locimage/' + brewApi + brewInfo.placeId + '&s=json'
+                        var queryURL = 'https://beermapping.com/webservice/locimage/' + brewApi + brewInfo.placeId + '&s=json'
                         $.ajax({
                             url: queryURL,
                             method: 'GET'
@@ -322,7 +321,7 @@ $(document).ready(function () {
                                 <ul>
                                             <li>Address: ${brewInfo.street}<br>
                                             ${brewInfo.city}, ${brewInfo.state}</li>
-                                        <li>Reviews: ${brewInfo.review}</li>
+                                        <li>Type: ${brewInfo.type}</li>
     
                                         <li>Website: <a target= "_blank" href="http://www.${brewInfo.URL}">Link</a></li>
                                         <br>
@@ -378,7 +377,7 @@ $(document).ready(function () {
             console.log(response)
             $('#card-display').hide();
 
-            for (var i = 0; i < 20; i++) {
+            for (var i = 0; i < response.length; i++) {
                 displayCards(i);
 
                 function displayCards(i) {
@@ -402,7 +401,7 @@ $(document).ready(function () {
                     var newCard = $('<div>');
                     newCard.addClass('newCard');
                     newCard.addClass('col');
-                    newCard.addClass('s12 m6 l6');
+                    newCard.addClass('s12 m6 l5');
 
                     newCard.append(`<div class="col s12">
                         <div class="card blue-grey lighten-5">
