@@ -6,16 +6,17 @@ body {
     height:768px;
 }
 
-
 #itinerary{
     background-color:black;
     width: 200px;
     min-height: 100vh;
     margin-right: 2%;
 }
+
 .collapsible {
     border:1px solid black;
 }
+
 .collapsible-body {
     background-color: lightgray;
 }
@@ -62,6 +63,7 @@ input {
 .input-field input[type=text]:focus + label {
     color:#124daa !important;
 }
+
 /* label underline focus color */
   .input-field input[type=text]:focus {
     border-bottom: 1px solid #124daa !important;
@@ -94,6 +96,7 @@ p, h1, h4, h5 {
 
 img {
     max-width: 100%;
+    height:175px;
 }
 
 #card-display {
@@ -119,6 +122,17 @@ img {
     color:#124daa;
 }
 
+#finished {
+    margin-left: 5%;
+}
+
+#loading {
+    width:100px;
+    height:100px;
+    position:fixed;
+    top: 45%;
+    left: 45%;
+}
 
 
 
