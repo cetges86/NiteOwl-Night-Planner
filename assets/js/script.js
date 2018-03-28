@@ -11,6 +11,7 @@ $(document).ready(function () {
     var enteredLong;
     var enteredCity;
     var enteredState;
+    var userEvents = [];
 
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
@@ -218,17 +219,23 @@ $(document).ready(function () {
         $(document).on('click', '.addButton', function (event) {
             var restName = $(this).attr('data-name');
             var restAddr = $(this).attr('data-addr');
+            
+            userEvents.push({
+                name:restName,
+                info:restAddr
+            });
 
+            console.log(userEvents);
 
             var newItem = $('<li>');
             newItem.append(`<div class="collapsible-header teal darken-3 white-text">
             <i class="material-icons right-align">more_horiz</i>
             ` + restName + `
             </div>
-        <div class="collapsible-body">
+            <div class="collapsible-body">
             <span>` + restAddr + `</span>
-        </div>
-        </li>`);
+             </div>
+            </li>`);
             newItem.appendTo('#eventList').fadeIn(1000);
             $('#finished').removeClass('disabled').addClass('waves-effect');
             $('#finished').addClass('waves-light');
