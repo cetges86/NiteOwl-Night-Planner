@@ -26,8 +26,6 @@ $(document).ready(function () {
 
     $('.collapsible').collapsible();
     $('.tooltipped').tooltip();
-  
-
 
     function findLocation() {
         console.log("ran")
@@ -50,24 +48,7 @@ $(document).ready(function () {
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
 
-
     // find restaurants based on user location and display cards
-
-    function addToNight() {
-        $('#itinerary').on('click', function (event) {
-            var newItem = $('<li>');
-            newItem.append(`<div class="collapsible-header">
-            First
-            </div>
-         <div class="collapsible-body">
-            <span>Lorem ipsum dolor sit amet.</span>
-            </div>
-            </li>`);
-            newItem.appendTo('#eventList');
-        });
-
-    };
-
 
     addToNight();
 
@@ -75,6 +56,7 @@ $(document).ready(function () {
     $('#back').hide();
     $('#inputs').hide();
     $('#itinerary').hide();
+    $('#loading').hide();
 
 
     $('.btn-large').on('click', function (event) {
@@ -82,8 +64,6 @@ $(document).ready(function () {
         $('#inputs').show(1500);
         findLocation();
     });
-
-
 
     $('#submit').click(function (event) {
         event.preventDefault();
@@ -111,6 +91,7 @@ $(document).ready(function () {
         $('#inputs').hide();
         $('#icons').show(1500);
         $('#itinerary').show(1500);
+        $('#loading').hide();
         zipToLocation();
 
     })
@@ -132,6 +113,9 @@ $(document).ready(function () {
             //BUG - address.components[3] is sometimes "US", not shortname state
             enteredState = response.results[0].address_components[3].short_name;
 
+            if (enteredState === "US") {
+                enteredState = response.results[0].address_components[2].short_name;
+            }
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
 
@@ -150,9 +134,10 @@ $(document).ready(function () {
         restaurantsInfo();
     })
 
+
     function restaurantsInfo() {
         zipToLocation();
-
+        $('#loading').show();
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
 
@@ -166,9 +151,7 @@ $(document).ready(function () {
             method: "Get"
         }).then(function (response) {
             console.log(response);
-
-            $('#card-display').hide();
-
+            $('#loading').hide();
             for (var i = 0; i < 20; i++) {
                 displayCards(i);
 
@@ -247,6 +230,8 @@ $(document).ready(function () {
         </div>
         </li>`);
             newItem.appendTo('#eventList').fadeIn(1000);
+            $('#finished').removeClass('disabled').addClass('waves-effect');
+            $('#finished').addClass('waves-light');
         });
 
     };
@@ -262,12 +247,16 @@ $(document).ready(function () {
         zipToLocation();
         console.log(enteredCity);
         console.log(enteredState);
+        $('#loading').show();
+
         var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
         var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
         $.ajax({
             url: queryURL,
             method: 'GET'
         }).then(function (response) {
+            $('#loading').hide();
+            $('#card-display').hide();
             console.log(response);
             for (var i = 0; i < response.length; i++) {
                 displayCards(i);
@@ -280,29 +269,26 @@ $(document).ready(function () {
                         state: response[i].state,
                         review: response[i].reviewlink,
                         URL: response[i].url,
-                        placeId: response[i].id,
-                        type: response[i].status,
-                        hasImage: response[i].imagecount
+                        type: response[i].status
                     };
 
+                    var image = "";
+                    if (brewInfo.type === "Brewery") {
+                        image = "assets/images/beer.jpg"
+                    } else if (brewInfo.type === "Brewpub"){
+                        image = "assets/images/brewpub.jpg"
+                    } else if (brewInfo.type === "Beer Bar"){
+                        image = "assets/images/beerbar.jpg"
+                    } else {
+                        image = "assets/images/homebrew.jpg"
+                    }
+
                     if (brewInfo.type != "Beer Store") {
-                        var image = "";
-                        var queryURL = 'https://beermapping.com/webservice/locimage/' + brewApi + brewInfo.placeId + '&s=json'
-                        $.ajax({
-                            url: queryURL,
-                            method: 'GET'
-                        }).then(function (response) {
-                            console.log(response)
-                            image = response[0].imageurl;
 
-                            if (image === null) {
-                                image = "assets/images/beer.jpg"
-                            }
+                        var newCard = $('<div>');
+                        newCard.addClass('newCard', 'col', 's4');
 
-                            var newCard = $('<div>');
-                            newCard.addClass('newCard', 'col', 's4');
-
-                            newCard.append(`<div class="card small">
+                        newCard.append(`<div class="card small">
                                       <div class="card-image waves-effect waves-block waves-light">
                                      <img id="image" class="activator" src="${image}">
                                  </div>
@@ -332,17 +318,17 @@ $(document).ready(function () {
                                            </div>`);
 
 
-                            newCard.appendTo('#card-display');
+                        newCard.appendTo('#card-display');
 
-                        })
+
                     }
 
                 }
-                $('.tooltipped').tooltip();
-                $('#card-display').show(2000);
-                $('#back').show();
-                goBack();
             };
+            $('.tooltipped').tooltip();
+            $('#card-display').show(2000);
+            $('#back').show();
+            goBack();
         });
     };
     function goBack() {
@@ -356,15 +342,13 @@ $(document).ready(function () {
     //movies API call
     //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
 
-    //MUST UPDATE TO TODAY'S DATE, OTHERWISE NO RESPONSE GIVEN
-
     $('#movies').on('click', function (event) {
         $('#icons').hide();
         movieTimes();
     })
 
     function movieTimes() {
-
+        $('#loading').show();
         var today = moment().format("YYYY-MM-DD");
 
         var queryURL = `https://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
@@ -375,6 +359,7 @@ $(document).ready(function () {
             method: 'GET'
         }).then(function (response) {
             console.log(response)
+            $('#loading').hide();
             $('#card-display').hide();
 
             for (var i = 0; i < response.length; i++) {
@@ -390,11 +375,15 @@ $(document).ready(function () {
                         site: response[i].officialUrl,
                         tickets: response[i].showtimes[0].ticketURI,
                         imageHeight: response[i].preferredImage.height,
-                        runTime:response[i].runTime
+                        runTime: response[i].runTime
                     }
 
                     if (response[i].ratings != undefined) {
                         movieInfo.rated = response[i].ratings[0].code;
+                    };
+
+                    if (response[i].runTime === undefined) {
+                        movieInfo.runTime = "000Unknown"
                     };
 
                     var dispRun = movieInfo.runTime.substring(3, movieInfo.runTime.length)

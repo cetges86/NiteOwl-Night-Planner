@@ -23,12 +23,25 @@
     <div id="nameDisplay"></div>
     <div class="col s12">
 
-        <div id='itinerary' class='col s3 left'>
-
-            <ul class="collapsible" data-collapsible="accordion" id="eventList">
-            </ul>
+        <div id="loading" class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
         </div>
 
+        <div id='itinerary' class='col s3 left'>
+            <ul class="collapsible" data-collapsible="accordion" id="eventList">
+            </ul>
+            <button id="finished" class="btn disabled">Finished</button>
+        </div>
 
         <div id="title" class="valign-wrapper">
             <div class="row">
@@ -86,17 +99,14 @@
                 <i class="back-btn fas fa-arrow-alt-circle-left"></i>
             </div>
 
-            <div id="card-display" class="col s9 right">
-            </div>
-
+            <div id="card-display" class="col s9 right"></div>
         </div>
-    </div>
 
 
-    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+        <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 </body>
 
 </html>
