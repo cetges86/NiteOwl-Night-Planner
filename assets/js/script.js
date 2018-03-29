@@ -5,7 +5,8 @@ $(document).ready(function () {
     var myLong;
     // var myDestination = {};
 
-
+    var name;
+    var email;
     var myZip;
     var enteredLat;
     var enteredLong;
@@ -69,19 +70,11 @@ $(document).ready(function () {
     $('#submit').click(function (event) {
         event.preventDefault();
 
-        var name = $('#first_name').val().trim();
+        name = $('#first_name').val().trim();
 
-        var email = $('#email').val().trim();
+        email = $('#email').val().trim();
 
         myZip = $('#zip').val().trim();
-
-        var newUser = {
-            userName: name,
-            userEmail: email,
-            userZip: zip
-        };
-
-        database.ref().push(newUser)
 
         console.log(name);
         console.log(email);
@@ -225,7 +218,11 @@ $(document).ready(function () {
                 info:restAddr
             });
 
-            console.log(userEvents);
+            userEvents.push({
+                name: restName,
+                info: restAddr
+            });
+          
 
             var newItem = $('<li>');
             newItem.append(`<div class="collapsible-header teal darken-3 white-text">
@@ -242,6 +239,7 @@ $(document).ready(function () {
         });
 
     };
+    console.log(userEvents);
 
 
     $('#beer').on('click', function (event) {
@@ -282,9 +280,9 @@ $(document).ready(function () {
                     var image = "";
                     if (brewInfo.type === "Brewery") {
                         image = "assets/images/beer.jpg"
-                    } else if (brewInfo.type === "Brewpub"){
+                    } else if (brewInfo.type === "Brewpub") {
                         image = "assets/images/brewpub.jpg"
-                    } else if (brewInfo.type === "Beer Bar"){
+                    } else if (brewInfo.type === "Beer Bar") {
                         image = "assets/images/beerbar.jpg"
                     } else {
                         image = "assets/images/homebrew.jpg"
@@ -438,12 +436,18 @@ $(document).ready(function () {
         })
     };
 
-    // (function(){
-    // emailjs.init("user_nBhzUHHAwwNgqgg5DqXtt");
-    // })();
-    // emailjs.send("<gmail>","<template_jo7UwrFB>",{name: "", notes: "Check this out!"});
+    $(document).on('click', '#finished', function (event) {
+        database.ref().push({
+            userName: name,
+            userEmail: email,
+            userZip: myZip,
+            timeStamp: firebase.database.ServerValue.TIMESTAMP,
+            nightInfo: userEvents
+        });
+    });
 
-
-
+    // database.orderByChild('timeStamp').startAt(Date.now()).on('child_added', function(snapshot) {
+    // console.log('new record', snap.key());
+    // });
 
 });
