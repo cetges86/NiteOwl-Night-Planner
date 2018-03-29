@@ -3,16 +3,16 @@ $(document).ready(function () {
     // global variables
     var myLat;
     var myLong;
-    // var myDestination = {};
-
-
     var myZip;
+
+    // back up lat and long in case geolocation fails
     var enteredLat;
     var enteredLong;
     var enteredCity;
     var enteredState;
     var userEvents = [];
 
+    // initialize firebase
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
         authDomain: "teamaviato-30f76.firebaseapp.com",
@@ -22,12 +22,7 @@ $(document).ready(function () {
         messagingSenderId: "552400961206"
     };
 
-    firebase.initializeApp(config);
-    var database = firebase.database();
-
-    $('.collapsible').collapsible();
-    $('.tooltipped').tooltip();
-
+    // use html geolocation to find user location
     function findLocation() {
         console.log("ran")
 
@@ -48,56 +43,6 @@ $(document).ready(function () {
         };
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
-
-    // find restaurants based on user location and display cards
-
-    addToNight();
-
-    $('#icons').hide();
-    $('#back').hide();
-    $('#inputs').hide();
-    $('#itinerary').hide();
-    $('#loading').hide();
-
-
-    $('.btn-large').on('click', function (event) {
-        $('#title').fadeOut(2000);
-        $('#inputs').show(1500);
-        findLocation();
-    });
-
-    $('#submit').click(function (event) {
-        event.preventDefault();
-
-        var name = $('#first_name').val().trim();
-
-        var email = $('#email').val().trim();
-
-        myZip = $('#zip').val().trim();
-
-        var newUser = {
-            userName: name,
-            userEmail: email,
-            userZip: zip
-        };
-
-        database.ref().push(newUser)
-
-        console.log(name);
-        console.log(email);
-        var nameDisplay = (`<h5> ${name}'s Night </h5>`);
-        $('#nameDisplay').append(nameDisplay).fadeIn(2000);
-
-
-        $('#inputs').hide();
-        $('#icons').show(1500);
-        $('#itinerary').show(1500);
-        $('#loading').hide();
-        zipToLocation();
-
-    })
-
-    // will need to add functionality to pull database info for now can't pass the variables back out to use globally
 
     function zipToLocation() {
 
@@ -127,14 +72,6 @@ $(document).ready(function () {
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
-
-
-
-    $('#food').on('click', function (event) {
-        $('#icons').hide();
-        restaurantsInfo();
-    })
-
 
     function restaurantsInfo() {
         zipToLocation();
@@ -213,146 +150,6 @@ $(document).ready(function () {
 
         });
     };
-
-
-    function addToNight() {
-        $(document).on('click', '.addButton', function (event) {
-            var restName = $(this).attr('data-name');
-            var restAddr = $(this).attr('data-addr');
-            
-            userEvents.push({
-                name:restName,
-                info:restAddr
-            });
-
-            console.log(userEvents);
-
-            var newItem = $('<li>');
-            newItem.append(`<div class="collapsible-header teal darken-3 white-text">
-            <i class="material-icons right-align">more_horiz</i>
-            ` + restName + `
-            </div>
-            <div class="collapsible-body">
-            <span>` + restAddr + `</span>
-             </div>
-            </li>`);
-            newItem.appendTo('#eventList').fadeIn(1000);
-            $('#finished').removeClass('disabled').addClass('waves-effect');
-            $('#finished').addClass('waves-light');
-        });
-
-    };
-
-
-    $('#beer').on('click', function (event) {
-        $('#icons').hide();
-        breweryInfo();
-    });
-
-
-    function breweryInfo() {
-        zipToLocation();
-        console.log(enteredCity);
-        console.log(enteredState);
-        $('#loading').show();
-
-        var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
-        var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
-        $.ajax({
-            url: queryURL,
-            method: 'GET'
-        }).then(function (response) {
-            $('#loading').hide();
-            $('#card-display').hide();
-            console.log(response);
-            for (var i = 0; i < response.length; i++) {
-                displayCards(i);
-
-                function displayCards(i) {
-                    var brewInfo = {
-                        name: response[i].name,
-                        street: response[i].street,
-                        city: response[i].city,
-                        state: response[i].state,
-                        review: response[i].reviewlink,
-                        URL: response[i].url,
-                        type: response[i].status
-                    };
-
-                    var image = "";
-                    if (brewInfo.type === "Brewery") {
-                        image = "assets/images/beer.jpg"
-                    } else if (brewInfo.type === "Brewpub"){
-                        image = "assets/images/brewpub.jpg"
-                    } else if (brewInfo.type === "Beer Bar"){
-                        image = "assets/images/beerbar.jpg"
-                    } else {
-                        image = "assets/images/homebrew.jpg"
-                    }
-
-                    if (brewInfo.type != "Beer Store") {
-
-                        var newCard = $('<div>');
-                        newCard.addClass('newCard', 'col', 's4');
-
-                        newCard.append(`<div class="card small">
-                                      <div class="card-image waves-effect waves-block waves-light">
-                                     <img id="image" class="activator" src="${image}">
-                                 </div>
-                                 <div class="card-content">
-                                     <span class="card-title activator grey-text text-darken-4">${brewInfo.name}
-                                         <i class="material-icons right">more_vert</i>
-                                     </span>
-                                     <p>
-                                         <a target="_blank" href="${brewInfo.review}">Reviews</a>
-                                     </p>
-                                 </div>
-                                 <div class="card-reveal">
-                                     <span class="card-title grey-text text-darken-4">${brewInfo.name}
-                                         <i class="material-icons right">close</i>
-                                     </span>
-                                <ul>
-                                            <li>Address: ${brewInfo.street}<br>
-                                            ${brewInfo.city}, ${brewInfo.state}</li>
-                                        <li>Type: ${brewInfo.type}</li>
-    
-                                        <li>Website: <a target= "_blank" href="http://www.${brewInfo.URL}">Link</a></li>
-                                        <br>
-    
-                                        <a class="tooltipped" data-position="right" data-tooltip="Add to Night"><i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i></a>
-                                       </ul>
-                                       </div>
-                                           </div>`);
-
-
-                        newCard.appendTo('#card-display');
-
-
-                    }
-
-                }
-            };
-            $('.tooltipped').tooltip();
-            $('#card-display').show(2000);
-            $('#back').show();
-            goBack();
-        });
-    };
-    function goBack() {
-        $(document).on('click', '.back-btn', function (event) {
-            $('#card-display').empty();
-            $('#icons').show(1500);
-            $('#back').hide();
-        });
-    };
-
-    //movies API call
-    //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
-
-    $('#movies').on('click', function (event) {
-        $('#icons').hide();
-        movieTimes();
-    })
 
     function movieTimes() {
         $('#loading').show();
@@ -438,12 +235,199 @@ $(document).ready(function () {
         })
     };
 
-    // (function(){
-    // emailjs.init("user_nBhzUHHAwwNgqgg5DqXtt");
-    // })();
-    // emailjs.send("<gmail>","<template_jo7UwrFB>",{name: "", notes: "Check this out!"});
+    function breweryInfo() {
+        zipToLocation();
+        console.log(enteredCity);
+        console.log(enteredState);
+        $('#loading').show();
+
+        var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
+        var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+        }).then(function (response) {
+            $('#loading').hide();
+            $('#card-display').hide();
+            console.log(response);
+            for (var i = 0; i < response.length; i++) {
+                displayCards(i);
+
+                function displayCards(i) {
+                    var brewInfo = {
+                        name: response[i].name,
+                        street: response[i].street,
+                        city: response[i].city,
+                        state: response[i].state,
+                        review: response[i].reviewlink,
+                        URL: response[i].url,
+                        type: response[i].status
+                    };
+
+                    var image = "";
+                    if (brewInfo.type === "Brewery") {
+                        image = "assets/images/beer.jpg"
+                    } else if (brewInfo.type === "Brewpub") {
+                        image = "assets/images/brewpub.jpg"
+                    } else if (brewInfo.type === "Beer Bar") {
+                        image = "assets/images/beerbar.jpg"
+                    } else {
+                        image = "assets/images/homebrew.jpg"
+                    }
+
+                    if (brewInfo.type != "Beer Store") {
+
+                        var newCard = $('<div>');
+                        newCard.addClass('newCard', 'col', 's4');
+
+                        newCard.append(`<div class="card small">
+                                      <div class="card-image waves-effect waves-block waves-light">
+                                     <img id="image" class="activator" src="${image}">
+                                 </div>
+                                 <div class="card-content">
+                                     <span class="card-title activator grey-text text-darken-4">${brewInfo.name}
+                                         <i class="material-icons right">more_vert</i>
+                                     </span>
+                                     <p>
+                                         <a target="_blank" href="${brewInfo.review}">Reviews</a>
+                                     </p>
+                                 </div>
+                                 <div class="card-reveal">
+                                     <span class="card-title grey-text text-darken-4">${brewInfo.name}
+                                         <i class="material-icons right">close</i>
+                                     </span>
+                                <ul>
+                                            <li>Address: ${brewInfo.street}<br>
+                                            ${brewInfo.city}, ${brewInfo.state}</li>
+                                        <li>Type: ${brewInfo.type}</li>
+    
+                                        <li>Website: <a target= "_blank" href="http://www.${brewInfo.URL}">Link</a></li>
+                                        <br>
+    
+                                        <a class="tooltipped" data-position="right" data-tooltip="Add to Night"><i id="plus" data-name="${brewInfo.name}" data-addr = "${brewInfo.street}"class="right-align material-icons addButton">add_circle</i></a>
+                                       </ul>
+                                       </div>
+                                           </div>`);
 
 
+                        newCard.appendTo('#card-display');
+
+
+                    }
+
+                }
+            };
+            $('.tooltipped').tooltip();
+            $('#card-display').show(2000);
+            $('#back').show();
+            goBack();
+        });
+    };
+
+    function addToNight() {
+        $(document).on('click', '.addButton', function (event) {
+            var restName = $(this).attr('data-name');
+            var restAddr = $(this).attr('data-addr');
+
+            userEvents.push({
+                name: restName,
+                info: restAddr
+            });
+
+            console.log(userEvents);
+
+            var newItem = $('<li>');
+            newItem.append(`<div class="collapsible-header teal darken-3 white-text">
+            <i class="material-icons right-align">more_horiz</i>
+            ` + restName + `
+            </div>
+            <div class="collapsible-body">
+            <span>` + restAddr + `</span>
+             </div>
+            </li>`);
+            newItem.appendTo('#eventList').fadeIn(1000);
+            $('#finished').removeClass('disabled').addClass('waves-effect');
+            $('#finished').addClass('waves-light');
+        });
+
+    };
+    
+    function goBack() {
+        $(document).on('click', '.back-btn', function (event) {
+            $('#card-display').empty();
+            $('#icons').show(1500);
+            $('#back').hide();
+        });
+    };
+
+
+    // find restaurants based on user location and display cards
+    firebase.initializeApp(config);
+    var database = firebase.database();
+
+
+    $('.collapsible').collapsible();
+    $('.tooltipped').tooltip();
+
+    $('#icons').hide();
+    $('#back').hide();
+    $('#inputs').hide();
+    $('#itinerary').hide();
+    $('#loading').hide();
+
+    $('.btn-large').on('click', function (event) {
+        $('#title').fadeOut(2000);
+        $('#inputs').show(1500);
+        findLocation();
+    });
+
+    $('#submit').click(function (event) {
+        event.preventDefault();
+
+        var name = $('#first_name').val().trim();
+
+        var email = $('#email').val().trim();
+
+        myZip = $('#zip').val().trim();
+
+        var newUser = {
+            userName: name,
+            userEmail: email,
+            userZip: zip
+        };
+
+        database.ref().push(newUser)
+
+        console.log(name);
+        console.log(email);
+        var nameDisplay = (`<h5> ${name}'s Night </h5>`);
+        $('#nameDisplay').append(nameDisplay).fadeIn(2000);
+
+
+        $('#inputs').hide();
+        $('#icons').show(1500);
+        $('#itinerary').show(1500);
+        $('#loading').hide();
+        zipToLocation();
+
+    });
+
+    $('#food').on('click', function (event) {
+        $('#icons').hide();
+        restaurantsInfo();
+    });
+
+    $('#beer').on('click', function (event) {
+        $('#icons').hide();
+        breweryInfo();
+    });
+
+    $('#movies').on('click', function (event) {
+        $('#icons').hide();
+        movieTimes();
+    });
+
+    addToNight();
 
 
 });
