@@ -389,9 +389,9 @@ $(document).ready(function () {
     $('#submit').click(function (event) {
         event.preventDefault();
 
-        var name = $('#first_name').val().trim();
+        name = $('#first_name').val().trim();
 
-        var email = $('#email').val().trim();
+        email = $('#email').val().trim();
 
         myZip = $('#zip').val().trim();
 
