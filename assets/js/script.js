@@ -3,17 +3,22 @@ $(document).ready(function () {
     // global variables
     var myLat;
     var myLong;
+
     // var myDestination = {};
 
     var name;
     var email;
+
     var myZip;
+
+    // back up lat and long in case geolocation fails
     var enteredLat;
     var enteredLong;
     var enteredCity;
     var enteredState;
     var userEvents = [];
 
+    // initialize firebase
     var config = {
         apiKey: "AIzaSyCtY5eXc4wHHN7EL_cuONXMwB_1F8n939s",
         authDomain: "teamaviato-30f76.firebaseapp.com",
@@ -23,15 +28,8 @@ $(document).ready(function () {
         messagingSenderId: "552400961206"
     };
 
-    firebase.initializeApp(config);
-    var database = firebase.database();
-
-    $('.collapsible').collapsible();
-    $('.tooltipped').tooltip();
-
+    // use html geolocation to find user location
     function findLocation() {
-        console.log("ran")
-
         var options = {
             enableHighAccuracy: true,
             timeout: 100000,
@@ -49,48 +47,6 @@ $(document).ready(function () {
         };
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
-
-    // find restaurants based on user location and display cards
-
-    addToNight();
-
-    $('#icons').hide();
-    $('#back').hide();
-    $('#inputs').hide();
-    $('#itinerary').hide();
-    $('#loading').hide();
-
-
-    $('.btn-large').on('click', function (event) {
-        $('#title').fadeOut(2000);
-        $('#inputs').show(1500);
-        findLocation();
-    });
-
-    $('#submit').click(function (event) {
-        event.preventDefault();
-
-        name = $('#first_name').val().trim();
-
-        email = $('#email').val().trim();
-
-        myZip = $('#zip').val().trim();
-
-        console.log(name);
-        console.log(email);
-        var nameDisplay = (`<h5> ${name}'s Night </h5>`);
-        $('#nameDisplay').append(nameDisplay).fadeIn(2000);
-
-
-        $('#inputs').hide();
-        $('#icons').show(1500);
-        $('#itinerary').show(1500);
-        $('#loading').hide();
-        zipToLocation();
-
-    })
-
-    // will need to add functionality to pull database info for now can't pass the variables back out to use globally
 
     function zipToLocation() {
 
@@ -120,14 +76,6 @@ $(document).ready(function () {
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
-
-
-
-    $('#food').on('click', function (event) {
-        $('#icons').hide();
-        restaurantsInfo();
-    })
-
 
     function restaurantsInfo() {
         zipToLocation();
@@ -207,46 +155,90 @@ $(document).ready(function () {
         });
     };
 
+    function movieTimes() {
+        $('#loading').show();
+        var today = moment().format("YYYY-MM-DD");
 
-    function addToNight() {
-        $(document).on('click', '.addButton', function (event) {
-            var restName = $(this).attr('data-name');
-            var restAddr = $(this).attr('data-addr');
-            
-            userEvents.push({
-                name:restName,
-                info:restAddr
-            });
+        var queryURL = `https://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
-            userEvents.push({
-                name: restName,
-                info: restAddr
-            });
-          
+        console.log(myZip)
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+        }).then(function (response) {
+            console.log(response)
+            $('#loading').hide();
+            $('#card-display').hide();
 
-            var newItem = $('<li>');
-            newItem.append(`<div class="collapsible-header teal darken-3 white-text">
-            <i class="material-icons right-align">more_horiz</i>
-            ` + restName + `
-            </div>
-            <div class="collapsible-body">
-            <span>` + restAddr + `</span>
-             </div>
-            </li>`);
-            newItem.appendTo('#eventList').fadeIn(1000);
-            $('#finished').removeClass('disabled').addClass('waves-effect');
-            $('#finished').addClass('waves-light');
-        });
+            for (var i = 0; i < response.length; i++) {
+                displayCards(i);
 
+                function displayCards(i) {
+
+
+                    var movieInfo = {
+                        posterImage: response[i].preferredImage.uri,
+                        title: response[i].title,
+                        rated: "Not Rated",
+                        plot: response[i].shortDescription,
+                        site: response[i].officialUrl,
+                        tickets: response[i].showtimes[0].ticketURI,
+                        imageHeight: response[i].preferredImage.height,
+                        runTime: response[i].runTime
+                    }
+
+                    if (response[i].ratings != undefined) {
+                        movieInfo.rated = response[i].ratings[0].code;
+                    };
+
+                    if (response[i].runTime === undefined) {
+                        movieInfo.runTime = "000Unknown"
+                    };
+
+                    var dispRun = movieInfo.runTime.substring(3, movieInfo.runTime.length)
+                    var newCard = $('<div>');
+                    newCard.addClass('newCard');
+                    newCard.addClass('col');
+                    newCard.addClass('s12 m6 l5');
+
+                    newCard.append(`<div class="col s12">
+                        <div class="card blue-grey lighten-5">
+                            <div class="card-content">
+                                <span class="center-align card-title">${movieInfo.title}</span>
+                                <div class= "col s6">
+                                    <img src="http://developer.tmsimg.com/${movieInfo.posterImage}?api_key=3ds9gdyq4eu8mya6kmf6uv5g">
+                                    <p>Runtime: ${dispRun}
+                                </div>
+                                <div class= "col s6">
+                                    <p>${movieInfo.plot}</p> 
+                                    <p>Rated: ${movieInfo.rated}</p>                            
+                                </div>
+                            </div>
+                            <div class="card-action col s12">
+                                <div class="col s9">
+                                <a target= "_blank" href="${movieInfo.site}">Official Site</a><br>
+                                <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
+                                </div>
+                                <div class= "col s3 right-align">
+                                <a class="tooltipped" data-position="left" data-tooltip="Add to Night"><i id="plus" data-name="${movieInfo.title}" data-addr="${movieInfo.rated}, ${dispRun}" class="right-align material-icons addButton">add_circle</i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);
+
+                    var cardHeight = movieInfo.imageHeight - 70;
+                    $('.card-content').css("height", cardHeight);
+                    $('.newCard').css('margin', 0)
+                    newCard.appendTo('#card-display');
+                }
+            };
+
+            $('.tooltipped').tooltip();
+            $('#card-display').show(2000);
+            $('#back').show();
+            goBack();
+        })
     };
-    console.log(userEvents);
-
-
-    $('#beer').on('click', function (event) {
-        $('#icons').hide();
-        breweryInfo();
-    });
-
 
     function breweryInfo() {
         zipToLocation();
@@ -336,6 +328,35 @@ $(document).ready(function () {
             goBack();
         });
     };
+
+    function addToNight() {
+        $(document).on('click', '.addButton', function (event) {
+            var restName = $(this).attr('data-name');
+            var restAddr = $(this).attr('data-addr');
+
+            userEvents.push({
+                name: restName,
+                info: restAddr
+            });
+
+            console.log(userEvents);
+
+            var newItem = $('<li>');
+            newItem.append(`<div class="collapsible-header teal darken-3 white-text">
+            <i class="material-icons right-align">more_horiz</i>
+            ` + restName + `
+            </div>
+            <div class="collapsible-body">
+            <span>` + restAddr + `</span>
+             </div>
+            </li>`);
+            newItem.appendTo('#eventList').fadeIn(1000);
+            $('#finished').removeClass('disabled').addClass('waves-effect');
+            $('#finished').addClass('waves-light');
+        });
+
+    };
+    
     function goBack() {
         $(document).on('click', '.back-btn', function (event) {
             $('#card-display').empty();
@@ -344,97 +365,75 @@ $(document).ready(function () {
         });
     };
 
-    //movies API call
-    //API KEY: 3ds9gdyq4eu8mya6kmf6uv5g
+
+    // find restaurants based on user location and display cards
+    firebase.initializeApp(config);
+    var database = firebase.database();
+
+
+    $('.collapsible').collapsible();
+    $('.tooltipped').tooltip();
+
+    $('#icons').hide();
+    $('#back').hide();
+    $('#inputs').hide();
+    $('#itinerary').hide();
+    $('#loading').hide();
+
+    $('.btn-large').on('click', function (event) {
+        $('#title').fadeOut(2000);
+        $('#inputs').show(1500);
+        findLocation();
+    });
+
+    $('#submit').click(function (event) {
+        event.preventDefault();
+
+        var name = $('#first_name').val().trim();
+
+        var email = $('#email').val().trim();
+
+        myZip = $('#zip').val().trim();
+
+        var newUser = {
+            userName: name,
+            userEmail: email,
+            userZip: zip
+        };
+
+        database.ref().push(newUser)
+
+        console.log(name);
+        console.log(email);
+        var nameDisplay = (`<h5> ${name}'s Night </h5>`);
+        $('#nameDisplay').append(nameDisplay).fadeIn(2000);
+
+
+
+        $('#inputs').hide();
+        $('#icons').show(1500);
+        $('#itinerary').show(1500);
+        $('#loading').hide();
+        zipToLocation();
+
+    });
+
+    $('#food').on('click', function (event) {
+        $('#icons').hide();
+        restaurantsInfo();
+    });
+
+    $('#beer').on('click', function (event) {
+        $('#icons').hide();
+        breweryInfo();
+    });
 
     $('#movies').on('click', function (event) {
         $('#icons').hide();
         movieTimes();
-    })
+    });
 
-    function movieTimes() {
-        $('#loading').show();
-        var today = moment().format("YYYY-MM-DD");
-
-        var queryURL = `https://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
-
-        console.log(myZip)
-        $.ajax({
-            url: queryURL,
-            method: 'GET'
-        }).then(function (response) {
-            console.log(response)
-            $('#loading').hide();
-            $('#card-display').hide();
-
-            for (var i = 0; i < response.length; i++) {
-                displayCards(i);
-
-                function displayCards(i) {
-
-                    var movieInfo = {
-                        posterImage: response[i].preferredImage.uri,
-                        title: response[i].title,
-                        rated: "Not Rated",
-                        plot: response[i].shortDescription,
-                        site: response[i].officialUrl,
-                        tickets: response[i].showtimes[0].ticketURI,
-                        imageHeight: response[i].preferredImage.height,
-                        runTime: response[i].runTime
-                    }
-
-                    if (response[i].ratings != undefined) {
-                        movieInfo.rated = response[i].ratings[0].code;
-                    };
-
-                    if (response[i].runTime === undefined) {
-                        movieInfo.runTime = "000Unknown"
-                    };
-
-                    var dispRun = movieInfo.runTime.substring(3, movieInfo.runTime.length)
-                    var newCard = $('<div>');
-                    newCard.addClass('newCard');
-                    newCard.addClass('col');
-                    newCard.addClass('s12 m6 l5');
-
-                    newCard.append(`<div class="col s12">
-                        <div class="card blue-grey lighten-5">
-                            <div class="card-content">
-                                <span class="center-align card-title">${movieInfo.title}</span>
-                                <div class= "col s6">
-                                    <img src="http://developer.tmsimg.com/${movieInfo.posterImage}?api_key=3ds9gdyq4eu8mya6kmf6uv5g">
-                                    <p>Runtime: ${dispRun}
-                                </div>
-                                <div class= "col s6">
-                                    <p>${movieInfo.plot}</p> 
-                                    <p>Rated: ${movieInfo.rated}</p>                            
-                                </div>
-                            </div>
-                            <div class="card-action col s12">
-                                <div class="col s9">
-                                <a target= "_blank" href="${movieInfo.site}">Official Site</a><br>
-                                <a target= "_blank" href="${movieInfo.tickets}">Buy Tickets</a>
-                                </div>
-                                <div class= "col s3 right-align">
-                                <a class="tooltipped" data-position="left" data-tooltip="Add to Night"><i id="plus" data-name="${movieInfo.title}" data-addr="${movieInfo.rated}, ${dispRun}" class="right-align material-icons addButton">add_circle</i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`);
-
-                    var cardHeight = movieInfo.imageHeight - 70;
-                    $('.card-content').css("height", cardHeight);
-                    $('.newCard').css('margin', 0)
-                    newCard.appendTo('#card-display');
-                }
-            };
-
-            $('.tooltipped').tooltip();
-            $('#card-display').show(2000);
-            $('#back').show();
-            goBack();
-        })
-    };
+    addToNight();
 
     $(document).on('click', '#finished', function (event) {
         database.ref().push({
@@ -445,6 +444,7 @@ $(document).ready(function () {
             nightInfo: userEvents
         });
     });
+
 
     // database.orderByChild('timeStamp').startAt(Date.now()).on('child_added', function(snapshot) {
     // console.log('new record', snap.key());
