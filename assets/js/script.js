@@ -3,6 +3,12 @@ $(document).ready(function () {
     // global variables
     var myLat;
     var myLong;
+
+    // var myDestination = {};
+
+    var name;
+    var email;
+
     var myZip;
 
     // back up lat and long in case geolocation fails
@@ -24,8 +30,6 @@ $(document).ready(function () {
 
     // use html geolocation to find user location
     function findLocation() {
-        console.log("ran")
-
         var options = {
             enableHighAccuracy: true,
             timeout: 100000,
@@ -170,6 +174,7 @@ $(document).ready(function () {
                 displayCards(i);
 
                 function displayCards(i) {
+
 
                     var movieInfo = {
                         posterImage: response[i].preferredImage.uri,
@@ -404,6 +409,7 @@ $(document).ready(function () {
         $('#nameDisplay').append(nameDisplay).fadeIn(2000);
 
 
+
         $('#inputs').hide();
         $('#icons').show(1500);
         $('#itinerary').show(1500);
@@ -429,5 +435,19 @@ $(document).ready(function () {
 
     addToNight();
 
+    $(document).on('click', '#finished', function (event) {
+        database.ref().push({
+            userName: name,
+            userEmail: email,
+            userZip: myZip,
+            timeStamp: firebase.database.ServerValue.TIMESTAMP,
+            nightInfo: userEvents
+        });
+    });
+
+
+    // database.orderByChild('timeStamp').startAt(Date.now()).on('child_added', function(snapshot) {
+    // console.log('new record', snap.key());
+    // });
 
 });
