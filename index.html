@@ -21,7 +21,7 @@
 
 <body>
     <div id="nameDisplay"></div>
-    
+
     <div class="col s12">
         <div id="loading" class="preloader-wrapper big active">
             <div class="spinner-layer spinner-blue-only">
@@ -40,7 +40,9 @@
         <div id='itinerary' class='col s3 left'>
             <ul class="collapsible" data-collapsible="accordion" id="eventList">
             </ul>
+            <a class="modal-trigger" href="#modal1">
             <button id="finished" class="btn disabled">Finished</button>
+            </a>
         </div>
 
         <div id="title" class="valign-wrapper">
@@ -100,6 +102,13 @@
             </div>
 
             <div id="card-display" class="col s9 right"></div>
+        </div>
+
+        <!-- Modal Structure -->
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h4 class="center-align">Email Sent!</h4>
+            </div>
         </div>
 
 

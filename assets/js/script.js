@@ -372,12 +372,14 @@ $(document).ready(function () {
 
     $('.collapsible').collapsible();
     $('.tooltipped').tooltip();
+    $('.modal').modal();
 
     $('#icons').hide();
     $('#back').hide();
     $('#inputs').hide();
     $('#itinerary').hide();
     $('#loading').hide();
+
 
     $('.btn-large').on('click', function (event) {
         $('#title').fadeOut(2000);
@@ -439,6 +441,7 @@ $(document).ready(function () {
     addToNight();
 
     $(document).on('click', '#finished', function (event) {
+
         database.ref().push({
             userName: name,
             userEmail: email,
@@ -459,13 +462,14 @@ $(document).ready(function () {
             };
         });
 
-        emailjs.send("default_service", "template_jo7UwrFB", {
-            "to_email": userEmail,
-            "reply_to": "dubcniteowl@gmail.com",
-            "to_name": userName,
-            "from_name": "Nite Owl Team",
-            "message_html":`<h1>${nightInfoLoc}</h1>`
-        });
+        // emailjs.send("default_service", "template_jo7UwrFB", {
+        //     "to_email": userEmail,
+        //     "reply_to": "dubcniteowl@gmail.com",
+        //     "to_name": userName,
+        //     "from_name": "Nite Owl Team",
+        //     "message_html":`<h1>${nightInfoLoc}</h1>`
+        // });
+
     });
 
 
