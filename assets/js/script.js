@@ -258,7 +258,7 @@ $(document).ready(function () {
             $('#loading').hide();
             $('#card-display').hide();
             console.log(response);
-            for (var i = 0; i < response.length; i++) {
+            for (var  i = 0; i < response.length; i++) {
                 displayCards(i);
 
                 function displayCards(i) {
