@@ -447,25 +447,37 @@ $(document).ready(function () {
             nightInfo: userEvents
         });
         database.ref().limitToLast(1).on('child_added', function (childSnapshot) {
+            console.log(childSnapshot.val())
             userName = childSnapshot.val().userName;
             userEmail = childSnapshot.val().userEmail;
-            for (i = 0; i < userEvents.length; i++){
-            nightInfoName = childSnapshot.val().nightInfo[i].name
-            nightInfoLoc = childSnapshot.val().nightInfo[i].info
-            console.log(userName)
-            console.log(userEmail)
-            console.log(nightInfoName)
-            console.log(nightInfoLoc)
+            nightInfoName = [];
+            nightInfoLoc = [];
+            var message = $('<ol>');
+            for (var i = 0; i < childSnapshot.val().nightInfo.length; i++) {
+                message.append(`
+                <li>
+                    <h2> Event number ${i}: ${childSnapshot.val().nightInfo[i].name}</h2>
+                    <ul><li> ${childSnapshot.val().nightInfo[i].info}</li></ul>
+                </li>
+                
+            `)
+                // console.log(userName);
+                // console.log(userEmail);
+                // console.log(nightInfoName);
+                // console.log(nightInfoLoc);
+                console.log(message);
             };
+            emailjs.send("default_service", "template_jo7UwrFB", {
+                "to_email": userEmail,
+                "reply_to": "dubcniteowl@gmail.com",
+                "to_name": userName,
+                "from_name": "Nite Owl Team",
+                "message_html": `<h1>Take a look at the night you have planned</h1>
+                            <ol>${message.html()}</ol>`
+            });
         });
 
-        emailjs.send("default_service", "template_jo7UwrFB", {
-            "to_email": userEmail,
-            "reply_to": "dubcniteowl@gmail.com",
-            "to_name": userName,
-            "from_name": "Nite Owl Team",
-            "message_html":`<h1>${nightInfoLoc}</h1>`
-        });
+
     });
 
 
