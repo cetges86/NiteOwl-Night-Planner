@@ -80,18 +80,18 @@ input {
   }
 
   .card-title{
-    font-family: 'BioRhyme', serif;
+    font-family: 'Quicksand', sans-serif;
     font-size: 1.2rem !important;
     font-weight: bold;
   }
 
   li {
-    font-family: 'BioRhyme', serif;
+    font-family: 'Quicksand', sans-serif;
   }
 
 p, h1, h4, h5 {
     color:lightgray;
-    font-family: 'BioRhyme', serif;
+    font-family: 'Quicksand', sans-serif;
 }
 
 img {
