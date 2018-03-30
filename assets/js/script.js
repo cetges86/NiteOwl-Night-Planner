@@ -443,11 +443,27 @@ $(document).ready(function () {
             timeStamp: firebase.database.ServerValue.TIMESTAMP,
             nightInfo: userEvents
         });
+        database.ref().limitToLast(1).on('child_added', function (childSnapshot) {
+            userName = childSnapshot.val().userName;
+            userEmail = childSnapshot.val().userEmail;
+            for (i = 0; i < userEvents.length; i++){
+            nightInfoName = childSnapshot.val().nightInfo[i].name
+            nightInfoLoc = childSnapshot.val().nightInfo[i].info
+            console.log(userName)
+            console.log(userEmail)
+            console.log(nightInfoName)
+            console.log(nightInfoLoc)
+            };
+        });
+
+        emailjs.send("default_service", "template_jo7UwrFB", {
+            "to_email": userEmail,
+            "reply_to": "dubcniteowl@gmail.com",
+            "to_name": userName,
+            "from_name": "Nite Owl Team",
+            "message_html":`<h1>${nightInfoLoc}</h1>`
+        });
     });
 
-
-    // database.orderByChild('timeStamp').startAt(Date.now()).on('child_added', function(snapshot) {
-    // console.log('new record', snap.key());
-    // });
 
 });
