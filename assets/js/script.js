@@ -372,12 +372,14 @@ $(document).ready(function () {
 
     $('.collapsible').collapsible();
     $('.tooltipped').tooltip();
+    $('.modal').modal();
 
     $('#icons').hide();
     $('#back').hide();
     $('#inputs').hide();
     $('#itinerary').hide();
     $('#loading').hide();
+
 
     $('.btn-large').on('click', function (event) {
         $('#title').fadeOut(2000);
@@ -439,6 +441,7 @@ $(document).ready(function () {
     addToNight();
 
     $(document).on('click', '#finished', function (event) {
+
         database.ref().push({
             userName: name,
             userEmail: email,
@@ -476,7 +479,6 @@ $(document).ready(function () {
                             <ol>${message.html()}</ol>`
             });
         });
-
 
     });
 

@@ -94,6 +94,10 @@ p, h1, h4, h5 {
     font-family: 'Quicksand', sans-serif;
 }
 
+h3 {
+    font-family: 'Quicksand', sans-serif
+}
+
 img {
     max-width: 100%;
     height:175px;
