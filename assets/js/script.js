@@ -3,12 +3,8 @@ $(document).ready(function () {
     // global variables
     var myLat;
     var myLong;
-
-    // var myDestination = {};
-
     var name;
     var email;
-
     var myZip;
 
     // back up lat and long in case geolocation fails
@@ -65,6 +61,8 @@ $(document).ready(function () {
 
             if (enteredState === "US") {
                 enteredState = response.results[0].address_components[2].short_name;
+            } else if (enteredState.length > 2) {
+                enteredState = response.results[0].address_components[4].short_name;
             }
 
             // need to pass enteredLat and enteredLong values to be defined by the info entered by user
@@ -79,6 +77,7 @@ $(document).ready(function () {
 
     function restaurantsInfo() {
         zipToLocation();
+        $('#card-display').hide();
         $('#loading').show();
         var queryURL = ''
         if (myLat === undefined && myLong === undefined) {
@@ -162,6 +161,7 @@ $(document).ready(function () {
         var queryURL = `https://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
 
         console.log(myZip)
+
         $.ajax({
             url: queryURL,
             method: 'GET'
@@ -174,7 +174,6 @@ $(document).ready(function () {
                 displayCards(i);
 
                 function displayCards(i) {
-
 
                     var movieInfo = {
                         posterImage: response[i].preferredImage.uri,
@@ -238,6 +237,7 @@ $(document).ready(function () {
             $('#back').show();
             goBack();
         })
+
     };
 
     function breweryInfo() {
@@ -344,8 +344,7 @@ $(document).ready(function () {
             var newItem = $('<li>');
             newItem.append(`<div class="collapsible-header teal darken-3 white-text">
             <i class="material-icons right-align">more_horiz</i>
-            ` + restName + `
-            </div>
+            ` + restName + `</div>
             <div class="collapsible-body">
             <span>` + restAddr + `</span>
              </div>
@@ -356,7 +355,7 @@ $(document).ready(function () {
         });
 
     };
-    
+
     function goBack() {
         $(document).on('click', '.back-btn', function (event) {
             $('#card-display').empty();
@@ -432,6 +431,10 @@ $(document).ready(function () {
         $('#icons').hide();
         movieTimes();
     });
+
+    $(document).on('click', '#delete', function (event) {
+        console.log(this);
+    })
 
     addToNight();
 
