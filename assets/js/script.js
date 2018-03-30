@@ -459,7 +459,7 @@ $(document).ready(function () {
             for (var i = 0; i < childSnapshot.val().nightInfo.length; i++) {
                 message.append(`
                 <li>
-                    <h2> Event number ${i}: ${childSnapshot.val().nightInfo[i].name}</h2>
+                    <h2> Event number ${i+1}: ${childSnapshot.val().nightInfo[i].name}</h2>
                     <ul><li> ${childSnapshot.val().nightInfo[i].info}</li></ul>
                 </li>
                 
