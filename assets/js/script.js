@@ -43,7 +43,7 @@ $(document).ready(function () {
         };
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
-
+    //gets city name, state name, lat&long from entered zip code
     function zipToLocation() {
 
         var queryURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + myZip + ',US'
@@ -55,26 +55,20 @@ $(document).ready(function () {
             enteredLat = response.results[0].geometry.location.lat;
             enteredLong = response.results[0].geometry.location.lng;
             enteredCity = response.results[0].address_components[1].long_name;
-
-            //BUG - address.components[3] is sometimes "US", not shortname state
             enteredState = response.results[0].address_components[3].short_name;
 
+            //since the response adds or removes categories based on the city
             if (enteredState === "US") {
                 enteredState = response.results[0].address_components[2].short_name;
             } else if (enteredState.length > 2) {
                 enteredState = response.results[0].address_components[4].short_name;
             }
 
-            // need to pass enteredLat and enteredLong values to be defined by the info entered by user
-
             console.log(enteredCity);
-            console.log(enteredLat);
-            console.log(enteredLong);
-
-            // need to pass enteredLat and enteredLong values to be defined by the info entered by user
         });
     };
 
+    //API call to zamato API to display restaurant cards
     function restaurantsInfo() {
         zipToLocation();
         $('#card-display').hide();
@@ -150,17 +144,16 @@ $(document).ready(function () {
             $('#card-display').show(2000);
             $('#back').show();
             goBack();
-
         });
     };
 
+    //function for movie API call **KNOWN ISSUE** API limits you to 2 calls/second, meaning many images are forbidden
     function movieTimes() {
         $('#loading').show();
+        //gets today's date for API call
         var today = moment().format("YYYY-MM-DD");
 
         var queryURL = `https://data.tmsapi.com/v1.1/movies/showings?startDate=${today}&zip=${myZip}&api_key=3ds9gdyq4eu8mya6kmf6uv5g`
-
-        console.log(myZip)
 
         $.ajax({
             url: queryURL,
@@ -185,15 +178,15 @@ $(document).ready(function () {
                         imageHeight: response[i].preferredImage.height,
                         runTime: response[i].runTime
                     }
-
+                    //since not all movies have official ratings
                     if (response[i].ratings != undefined) {
                         movieInfo.rated = response[i].ratings[0].code;
                     };
-
+                    //since not all movies have a defined runtime
                     if (response[i].runTime === undefined) {
                         movieInfo.runTime = "000Unknown"
                     };
-
+                    //removes the first three characters from response runtime to display in a more readable way
                     var dispRun = movieInfo.runTime.substring(3, movieInfo.runTime.length)
                     var newCard = $('<div>');
                     newCard.addClass('newCard');
@@ -240,14 +233,15 @@ $(document).ready(function () {
 
     };
 
+    //API call for beermapping API
     function breweryInfo() {
+        //gets enteredCity and State
         zipToLocation();
-        console.log(enteredCity);
-        console.log(enteredState);
         $('#loading').show();
 
         var brewApi = "ff0222dd8fe6c591c1c40a9656a717d8/"
         var queryURL = `https://beermapping.com/webservice/loccity/${brewApi}${enteredCity},${enteredState}&s=json`
+
         $.ajax({
             url: queryURL,
             method: 'GET'
@@ -269,6 +263,7 @@ $(document).ready(function () {
                         type: response[i].status
                     };
 
+                    //defines images based on the type of result
                     var image = "";
                     if (brewInfo.type === "Brewery") {
                         image = "assets/images/beer.jpg"
@@ -280,6 +275,7 @@ $(document).ready(function () {
                         image = "assets/images/homebrew.jpg"
                     }
 
+                    //filters out liquor stores
                     if (brewInfo.type != "Beer Store") {
 
                         var newCard = $('<div>');
@@ -329,17 +325,19 @@ $(document).ready(function () {
         });
     };
 
+    //click event that adds item to list when + icon is clicked
     function addToNight() {
         $(document).on('click', '.addButton', function (event) {
+
+            //pulls data attributes from plus icon that was clicked
             var restName = $(this).attr('data-name');
             var restAddr = $(this).attr('data-addr');
 
+            //pushes each event to an array
             userEvents.push({
                 name: restName,
                 info: restAddr
             });
-
-            console.log(userEvents);
 
             var newItem = $('<li>');
             newItem.append(`<div class="collapsible-header teal darken-3 white-text">
@@ -350,12 +348,14 @@ $(document).ready(function () {
              </div>
             </li>`);
             newItem.appendTo('#eventList').fadeIn(1000);
+
+            //enables the 'finished' button after adding your first event
             $('#finished').removeClass('disabled').addClass('waves-effect');
             $('#finished').addClass('waves-light');
         });
-
     };
 
+    //clears out card display and shows icon when back button is clicked
     function goBack() {
         $(document).on('click', '.back-btn', function (event) {
             $('#card-display').empty();
@@ -369,18 +369,19 @@ $(document).ready(function () {
     firebase.initializeApp(config);
     var database = firebase.database();
 
-
+    //materialize JS functions initialize
     $('.collapsible').collapsible();
     $('.tooltipped').tooltip();
     $('.modal').modal();
 
+    //hides all elements except landing page upon arrival
     $('#icons').hide();
     $('#back').hide();
     $('#inputs').hide();
     $('#itinerary').hide();
     $('#loading').hide();
 
-
+    //fades landing page away to get started
     $('.btn-large').on('click', function (event) {
         $('#title').fadeOut(2000);
         $('#inputs').show(1500);
@@ -389,13 +390,15 @@ $(document).ready(function () {
 
     $('#submit').click(function (event) {
         event.preventDefault();
-
+        
+        //saves off user inputs 
         name = $('#first_name').val().trim();
 
         email = $('#email').val().trim();
 
         myZip = $('#zip').val().trim();
 
+        //creates new user info and adds data to Firebase DB
         var newUser = {
             userName: name,
             userEmail: email,
@@ -404,12 +407,8 @@ $(document).ready(function () {
 
         database.ref().push(newUser)
 
-        console.log(name);
-        console.log(email);
         var nameDisplay = (`<h5> ${name}'s Night </h5>`);
         $('#nameDisplay').append(nameDisplay).fadeIn(2000);
-
-
 
         $('#inputs').hide();
         $('#icons').show(1500);
@@ -419,6 +418,7 @@ $(document).ready(function () {
 
     });
 
+    //click events for each icon
     $('#food').on('click', function (event) {
         $('#icons').hide();
         restaurantsInfo();
@@ -434,12 +434,9 @@ $(document).ready(function () {
         movieTimes();
     });
 
-    $(document).on('click', '#delete', function (event) {
-        console.log(this);
-    })
-
     addToNight();
 
+    //when finished button is clicked, it will add all events to db, which then is called to input into email.js template
     $(document).on('click', '#finished', function (event) {
 
         database.ref().push({
@@ -449,27 +446,22 @@ $(document).ready(function () {
             timeStamp: firebase.database.ServerValue.TIMESTAMP,
             nightInfo: userEvents
         });
+
         database.ref().limitToLast(1).on('child_added', function (childSnapshot) {
-            console.log(childSnapshot.val())
             userName = childSnapshot.val().userName;
             userEmail = childSnapshot.val().userEmail;
-            nightInfoName = [];
-            nightInfoLoc = [];
+
+           //composes email based on all user added events
             var message = $('<ol>');
             for (var i = 0; i < childSnapshot.val().nightInfo.length; i++) {
                 message.append(`
                 <li>
-                    <h2> Event number ${i+1}: ${childSnapshot.val().nightInfo[i].name}</h2>
+                    <h2> Event number ${i + 1}: ${childSnapshot.val().nightInfo[i].name}</h2>
                     <ul><li> ${childSnapshot.val().nightInfo[i].info}</li></ul>
-                </li>
-                
-            `)
-                // console.log(userName);
-                // console.log(userEmail);
-                // console.log(nightInfoName);
-                // console.log(nightInfoLoc);
-                console.log(message);
+                </li>`)
             };
+
+            //email template
             emailjs.send("default_service", "template_jo7UwrFB", {
                 "to_email": userEmail,
                 "reply_to": "dubcniteowl@gmail.com",
